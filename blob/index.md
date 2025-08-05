@@ -1,5 +1,3 @@
-[< Back](../)
-
 # blob
 
-![blob-icon](blob.png)
+<img src="blob.png" width="400"/>

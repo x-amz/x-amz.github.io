@@ -2,4 +2,4 @@
 
 ## [blob](blob)
 
-![blob-icon](blob/blob.png)
+<img src="blob/blob.png" width="200"/>
