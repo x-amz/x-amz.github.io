@@ -19,6 +19,6 @@ Anonymous crash logs may be collected by Apple and shared with us for the sole p
 ## Contact
 
 If you have any questions about this policy, you can reach us at:
-admin@x-amz.dev
+support@x-amz.dev
 
 Effective: August 2025
