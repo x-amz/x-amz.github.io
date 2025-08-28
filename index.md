@@ -1,7 +1,3 @@
-<head>
-    <link rel="stylesheet" href="../style.css">
-</head>
-
 [![](x-amz.png)](https://x-amz.dev)
 
 ## apps

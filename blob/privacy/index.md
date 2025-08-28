@@ -1,7 +1,3 @@
-<head>
-    <link rel="stylesheet" href="../style.css">
-</head>
-
 # Privacy Policy for `blob`
 
 `blob` does not collect, store, or share any personal information unless you explicitly choose to send it to us.
