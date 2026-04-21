@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250" fill="none">
+  <defs>
+    <linearGradient id="pageFace" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#e8edf2"/>
+      <stop offset="60%" stop-color="#dde3ea"/>
+      <stop offset="100%" stop-color="#cdd5de"/>
+    </linearGradient>
+    <linearGradient id="foldFace" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#dde3ea"/>
+    </linearGradient>
+    <!-- Shadow on the page surface: light from upper-right is blocked by the fold.
+         The entire page corner under the fold is in shadow.
+         Darkest at the crease, fading as you move away from the fold. -->
+    <radialGradient id="foldShadow" cx="0.85" cy="0.15" r="0.55" fx="0.95" fy="0.05">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.22"/>
+      <stop offset="50%" stop-color="#000000" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="pageShine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
+      <stop offset="30%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-8%" y="-4%" width="116%" height="112%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Page body -->
+  <path d="M32 8 H138 L184 54 V222 Q184 238 168 238 H32 Q16 238 16 222 V24 Q16 8 32 8 Z"
+        fill="url(#pageFace)" filter="url(#shadow)"/>
+
+  <!-- Page shine -->
+  <path d="M32 8 H138 L184 54 V222 Q184 238 168 238 H32 Q16 238 16 222 V24 Q16 8 32 8 Z"
+        fill="url(#pageShine)"/>
+
+  <!-- Shadow cast by fold onto page surface: covers entire upper-right area
+       the fold blocks light from reaching. Uses the page clip so it stays on the page. -->
+  <path d="M100 8 H138 L184 54 V120 Q140 100 100 8 Z" fill="url(#foldShadow)"/>
+
+  <!-- Fold flap -->
+  <path d="M138 8 L184 54 H160 Q138 54 138 32 Z" fill="url(#foldFace)"/>
+
+  <!-- Fold edge lines -->
+  <path d="M138 8 L184 54" stroke="#b8c4d0" stroke-width="0.5" fill="none"/>
+  <path d="M184 54 H160 Q138 54 138 32" stroke="#b8c4d0" stroke-width="0.5" fill="none"/>
+
+  <!-- Decorative code lines -->
+  <rect x="40" y="80" width="55" height="4" rx="2" fill="#00d4ff" opacity="0.25"/>
+  <rect x="100" y="80" width="60" height="4" rx="2" fill="#39ff14" opacity="0.15"/>
+  <rect x="40" y="96" width="80" height="4" rx="2" fill="#8e8e93" opacity="0.12"/>
+  <rect x="40" y="112" width="35" height="4" rx="2" fill="#ff2dfd" opacity="0.15"/>
+  <rect x="80" y="112" width="70" height="4" rx="2" fill="#ffe600" opacity="0.15"/>
+  <rect x="40" y="128" width="100" height="4" rx="2" fill="#8e8e93" opacity="0.08"/>
+  <rect x="40" y="148" width="20" height="3" rx="1.5" fill="#8e8e93" opacity="0.1"/>
+
+  <!-- .http label -->
+  <text x="100" y="200" font-family="'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif"
+        font-size="36" font-weight="600" fill="#8e8e93" text-anchor="middle" letter-spacing="1">.http</text>
+</svg>
