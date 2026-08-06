@@ -1,0 +1,324 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #171412;
+  --bg-lift: #1e1a16;
+  --surface: #201c18;
+  --border: #3a322a;
+  --border-soft: #2a2520;
+  --text: #e8e1d2;
+  --text-dim: #968b7c;
+  --pink: #e94a9c;
+  --pink-bright: #f46ab1;
+  --pink-dim: #a33570;
+  --pink-tint: rgba(233, 74, 156, 0.08);
+  --blue: #7b9fd4;
+  --serif: 'Iowan Old Style', 'Palatino Linotype', 'Palatino', 'Book Antiqua', 'Georgia', serif;
+}
+
+@keyframes reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+html {
+  font-size: 16px;
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--serif);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 55vh;
+  background: radial-gradient(ellipse at 50% 0%, rgba(44, 34, 26, 0.8) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+::selection {
+  background: var(--pink);
+  color: var(--bg);
+}
+
+.page {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 4rem;
+  animation: reveal 0.5s ease-out;
+}
+
+/* ── Masthead ── */
+
+.masthead {
+  text-align: center;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+
+.masthead .mark {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  vertical-align: top;
+}
+
+.masthead .wordmark {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.26em;
+  text-transform: lowercase;
+  font-variant: small-caps;
+  margin-top: 0;
+}
+
+.masthead .tagline {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  letter-spacing: 0.18em;
+  margin-top: 0.55rem;
+  font-style: italic;
+}
+
+/* ── Rules ── */
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3rem 0 2.25rem;
+}
+
+/* ── Sites ── */
+
+.sites {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Each link wears its destination's palette. */
+.site--byte-glass {
+  --accent: #00ff66;
+  --accent-bright: #00ff66;
+  --accent-tint: #050a07;
+  --accent-glow: 0 0 8px rgba(0, 255, 102, 0.85), 0 0 22px rgba(0, 255, 102, 0.5);
+}
+
+.site--requiem-rest {
+  --accent: #c49a2c;
+  --accent-bright: #d4aa3c;
+  --accent-tint: #3f0c14;
+  --accent-glow: none;
+}
+
+.site--http-files {
+  --accent: #00d4ff;
+  --accent-bright: #7df3ff;
+  --accent-tint: #3d1a66;
+  --accent-glow: none;
+}
+
+.site {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  column-gap: 0.95rem;
+  row-gap: 0.15rem;
+  padding: 0.9rem 1rem;
+  margin: 0 -1rem;
+  text-decoration: none;
+  color: var(--text);
+  border-radius: 3px;
+  transition: background 0.15s ease;
+}
+
+.site:hover,
+.site:focus-visible {
+  background: var(--accent-tint);
+  outline: none;
+}
+
+.site-icon {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: center;
+  justify-self: center;
+  height: 48px;
+  width: auto;
+  max-width: 48px;
+  border-radius: 22%;
+  display: block;
+}
+
+.site-name {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.005em;
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  transition: color 0.15s ease;
+}
+
+.site-arrow {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: center;
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  transition: color 0.15s ease, transform 0.2s ease;
+}
+
+.site-desc {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.site:hover .site-name,
+.site:focus-visible .site-name {
+  color: var(--accent-bright);
+  text-shadow: var(--accent-glow);
+}
+
+.site:hover .site-arrow,
+.site:focus-visible .site-arrow {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+
+/* ── Footer ── */
+
+footer {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+}
+
+footer .sep {
+  margin: 0 0.65em;
+  color: var(--border);
+}
+
+footer a {
+  color: var(--text-dim);
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+footer a:hover {
+  color: var(--text);
+  text-decoration-color: var(--text-dim);
+}
+
+/* ── Doc pages (support) ── */
+
+.backlink {
+  display: inline-block;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.backlink:hover {
+  color: var(--pink);
+  border-color: var(--pink-dim);
+}
+
+.doc h1 {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.04em;
+  font-variant: small-caps;
+  margin-bottom: 1.5rem;
+}
+
+.doc p {
+  font-size: 0.98rem;
+  margin-bottom: 0.9rem;
+  line-height: 1.7;
+}
+
+.doc a {
+  color: var(--pink);
+  text-decoration: underline;
+  text-decoration-color: var(--pink-dim);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+
+.doc a:hover {
+  color: var(--pink-bright);
+  text-decoration-color: var(--pink);
+}
+
+.doc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 1rem;
+}
+
+.doc li {
+  padding: 0.15rem 0 0.15rem 1.5rem;
+  position: relative;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.doc li::before {
+  content: '—';
+  color: var(--border);
+  position: absolute;
+  left: 0;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 520px) {
+  html { font-size: 15px; }
+  .page { padding: 3rem 1.25rem 3rem; }
+  .masthead .wordmark { font-size: 1.2rem; letter-spacing: 0.22em; }
+  .masthead .tagline { font-size: 0.76rem; letter-spacing: 0.15em; }
+  hr { margin: 2.5rem 0 2rem; }
+  .site {
+    padding: 0.75rem 0.85rem;
+    margin: 0 -0.85rem;
+    grid-template-columns: 42px 1fr auto;
+    column-gap: 0.8rem;
+  }
+  .site-icon { height: 42px; max-width: 42px; }
+  .site-name { font-size: 1.05rem; }
+  .site-desc { font-size: 0.88rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
