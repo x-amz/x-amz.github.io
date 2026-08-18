@@ -4,57 +4,465 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>X-AMZ LLC</title>
-  <meta name="description" content="X-AMZ LLC — an independent software business. Home of byte.glass, requiem, and http-files.org.">
-  <meta name="theme-color" content="#171412">
+  <meta name="description" content="X-AMZ LLC — an independent software company in Seattle. blob, requiem, Signs & Tokens, iam.pub, and more.">
+  <meta name="theme-color" content="#000000">
   <meta property="og:title" content="X-AMZ LLC">
-  <meta property="og:description" content="An independent software business. Home of byte.glass, requiem, and http-files.org.">
+  <meta property="og:description" content="An independent software company in Seattle. Now showing and coming soon.">
   <meta property="og:image" content="https://x-amz.dev/combined.png">
   <meta property="og:url" content="https://x-amz.dev">
   <meta property="og:type" content="website">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="apple-touch-icon" href="/favicon.png">
-  <link rel="stylesheet" href="/style.css">
+  <style>
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 400 900; src: url('/fonts/BodoniModa-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Bodoni Moda'; font-style: italic; font-weight: 400 900; src: url('/fonts/BodoniModa-Italic-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; src: url('/fonts/InstrumentSerif-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('/fonts/InstrumentSerif-Italic-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 400; src: url('/fonts/JuliaMono-Regular.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400; src: url('/fonts/B612Mono-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 700; src: url('/fonts/B612Mono-Bold-latin.woff2') format('woff2'); font-display: swap; }
+
+    :root {
+      --jet: #000000;
+      --wall-hair: #1A1A1A;
+      --ivory: #E6E1D3;
+      --dim: #7E7E74;
+      --gold: #C9A227;
+      --bodoni: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+      --ivy: 'IvyPresto Headline', 'Instrument Serif', 'Bodoni 72', Didot, Georgia, serif;
+      --source: 'JuliaMono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --serial: 'B612 Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; color-scheme: dark; }
+    body {
+      background: var(--jet);
+      color: var(--ivory);
+      font-family: var(--serial);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    .lobby { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+    /* ── Masthead: the studio card ── */
+    .mast { text-align: center; padding: 5rem 0 4.5rem; }
+    .mast .presents {
+      font-family: var(--serial); font-size: 0.62rem; font-weight: 400;
+      letter-spacing: 0.42em; text-transform: uppercase; color: var(--dim);
+    }
+    .mast h1 {
+      font-family: var(--bodoni); font-weight: 900;
+      font-size: clamp(5rem, 17vw, 11rem); line-height: 0.92;
+      color: #FFFFFF;
+      transform: scaleX(0.78);
+      letter-spacing: 0.01em;
+      margin-top: 1rem;
+    }
+    .mast .rule { width: 8rem; height: 1px; background: var(--gold); margin: 2rem auto 0; }
+
+    /* ── The wall ── */
+    .wall {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+      gap: 2.25rem;
+    }
+    .poster {
+      position: relative;
+      aspect-ratio: 27 / 40;
+      background: #030303;
+      border: 1px solid var(--wall-hair);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transition: border-color 0.18s ease, transform 0.18s ease;
+    }
+    a.poster:hover, a.poster:focus-visible { border-color: var(--acc, var(--gold)); transform: translateY(-3px); }
+    @media (prefers-reduced-motion: reduce) { .poster { transition: none; } }
+
+    .tagline {
+      font-family: var(--ivy); font-style: italic;
+      font-size: 0.92rem; color: var(--dim);
+      text-align: center; padding: 1.4rem 1.2rem 0;
+    }
+    .keyart { flex: 1; display: grid; place-content: center; padding: 1rem; min-height: 0; }
+    .p-title { text-align: center; padding: 0 1rem; }
+    .billing {
+      font-family: var(--serial); font-size: 0.5rem; font-weight: 400;
+      letter-spacing: 0.05em; line-height: 1.7; text-transform: uppercase;
+      color: var(--dim); text-align: center;
+      transform: scaleX(0.68);
+      padding: 0.8rem 0 0.2rem;
+      white-space: nowrap;
+    }
+    .release {
+      font-family: var(--serial); font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      text-align: center; color: var(--ivory);
+      padding: 0.4rem 1rem 1.4rem;
+    }
+    .release.soon { color: var(--gold); }
+
+    /* ── 01 requiem: the prestige gothic ── */
+    .p-requiem { --acc: #C49A2C; background: linear-gradient(180deg, #0B0405 0%, #170709 62%, #2B090C 100%); }
+    .p-requiem .keyart canvas { width: 150px; height: 150px; margin: 0 auto; }
+    .p-requiem .seal-note { font-family: var(--serial); font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: #7A5F52; text-align: center; margin-top: 0.9rem; }
+    .p-requiem .p-title { font-family: var(--ivy); font-size: 3rem; color: #E8DDC8; line-height: 1; }
+    .p-requiem .billing { color: #8A7263; }
+
+    /* ── 02 blob: the flat graphic ── */
+    .p-blob { --acc: #00FF66; background: #040705; }
+    .cell8 { display: grid; grid-template-columns: repeat(2, 3.4rem); grid-auto-rows: 3.4rem; gap: 0.9rem; justify-content: center; }
+    .cell8 i { border-radius: 50%; border: 2px solid #1C3326; }
+    .cell8 i.on { background: #00FF66; border-color: #00FF66; box-shadow: 0 0 16px rgba(0,255,102,0.55), 0 0 44px rgba(0,255,102,0.2); }
+    .p-blob .cell-note { font-family: var(--source); font-size: 0.62rem; color: #3E5A49; text-align: center; margin-top: 1.1rem; letter-spacing: 0.1em; }
+    .p-blob .p-title { font-family: var(--source); font-weight: 400; font-size: 2.1rem; letter-spacing: 0.34em; color: #00FF66; text-shadow: 0 0 12px rgba(0,255,102,0.5); text-indent: 0.34em; }
+    .p-blob .billing { color: #4E6B58; }
+
+    /* ── 03 Signs & Tokens: the tentpole ── */
+    .p-sigtok { --acc: var(--gold); background: radial-gradient(ellipse at 50% 38%, #14120A 0%, #000 68%); }
+    .p-sigtok .keyart canvas { width: 200px; height: 200px; margin: 0 auto; }
+    .p-sigtok .p-title {
+      font-family: var(--bodoni); font-weight: 800;
+      font-size: 1.9rem; line-height: 1.05; color: var(--ivory);
+      transform: scaleX(0.8);
+      letter-spacing: 0.04em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .p-sigtok .billing { color: #6E6A58; }
+
+    /* ── 04 iam.pub: the dossier ── */
+    .p-iam { --acc: #7FBF9E; background: #030404; }
+    .dossier { border: 1px solid #223028; padding: 0.7rem 0.9rem; background: #050807; }
+    .dossier pre { font-family: var(--source); font-size: 0.56rem; line-height: 1.25; color: #A8C8B5; }
+    .p-iam .mrz { font-family: var(--source); font-size: clamp(0.5rem, 1.5vw, 0.6rem); letter-spacing: 0.06em; color: #7FBF9E; text-align: center; margin-top: 1rem; white-space: nowrap; }
+    .p-iam .mrz .ck { color: var(--gold); font-weight: 700; }
+    .p-iam .p-title { font-family: var(--serial); font-weight: 700; font-size: 1.6rem; letter-spacing: 0.22em; color: var(--ivory); text-indent: 0.22em; }
+    .p-iam .billing { color: #566258; }
+
+    /* ── 05 byte glass: the monolith ── */
+    .p-glass { --acc: #9BB8A6; background: #020302; }
+    .monolith {
+      width: 5.4rem; height: 12rem; margin: 0 auto;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-left-color: rgba(255,255,255,0.42);
+      background: #010201;
+      overflow: hidden;
+      padding: 0.4rem 0.35rem;
+    }
+    .monolith pre { font-family: var(--source); font-size: 5.5px; line-height: 1.45; color: #274434; }
+    .p-glass .p-title { font-family: var(--source); font-size: 1.15rem; letter-spacing: 0.5em; text-transform: lowercase; color: #C9D8CE; text-indent: 0.5em; }
+    .p-glass .billing { color: #47544B; }
+
+    /* ── 06 hmac.sh: the chain ── */
+    .p-hmac { --acc: #FFB000; background: #0A0703; }
+    .chain { display: grid; gap: 0; justify-items: center; }
+    .chain .link {
+      border: 1px solid #4A3510; border-radius: 3px;
+      padding: 0.32rem 0.6rem;
+      font-family: var(--source); font-size: 0.66rem; letter-spacing: 0.06em;
+      color: #FFB000; background: #0E0A04;
+      display: flex; gap: 0.6rem; align-items: baseline;
+    }
+    .chain .link .lbl { font-family: var(--serial); font-size: 0.5rem; letter-spacing: 0.1em; color: #8A6A2A; text-transform: uppercase; }
+    .chain .drop { width: 1px; height: 0.7rem; background: #4A3510; }
+    .p-hmac .p-title { font-family: var(--source); font-size: 1.7rem; letter-spacing: 0.16em; color: #FFB000; text-indent: 0.16em; }
+    .p-hmac .billing { color: #6E5A34; }
+
+    /* ── 07 x-amz.date: the date card ── */
+    .p-date { --acc: var(--ivory); background: #000; }
+    .datecard { text-align: center; }
+    .datecard .big {
+      font-family: var(--serial); font-weight: 700;
+      font-size: 3.6rem; line-height: 1;
+      color: #FFFFFF; transform: scaleX(0.85);
+      letter-spacing: 0.02em;
+    }
+    .datecard .yr { font-family: var(--serial); font-size: 0.9rem; letter-spacing: 0.6em; color: var(--dim); margin-top: 0.5rem; text-indent: 0.6em; }
+    .datecard .code { margin-top: 1.2rem; min-height: 44px; }
+    .datecard .code svg { max-width: 100%; height: 44px; }
+    .datecard .iso { font-family: var(--source); font-size: 0.56rem; letter-spacing: 0.08em; color: #55554E; margin-top: 0.5rem; }
+    .p-date .p-title { font-family: var(--serial); font-weight: 400; font-size: 1.05rem; letter-spacing: 0.3em; color: var(--ivory); text-indent: 0.3em; }
+    .p-date .billing { color: #5C5C54; }
+
+    /* ── 08 req.to: the corridor ── */
+    .p-req { --acc: #C49A2C; background: #050403; }
+    .corridor { text-align: center; font-family: var(--source); color: #C49A2C; }
+    .corridor div { line-height: 1.28; }
+    .corridor .c1 { font-size: 1.9rem; opacity: 1; }
+    .corridor .c2 { font-size: 1.35rem; opacity: 0.72; }
+    .corridor .c3 { font-size: 0.95rem; opacity: 0.5; }
+    .corridor .c4 { font-size: 0.66rem; opacity: 0.34; }
+    .corridor .c5 { font-size: 0.46rem; opacity: 0.2; }
+    .corridor .end { font-size: 0.4rem; opacity: 0.6; color: var(--ivory); margin-top: 0.15rem; }
+    .p-req .p-title { font-family: var(--source); font-size: 1.5rem; letter-spacing: 0.2em; color: #E0BC55; text-indent: 0.2em; }
+    .p-req .billing { color: #6E5A34; }
+
+    /* ── 09 http-files: the document ── */
+    .p-spec { --acc: #FBFAF4; background: #060606; }
+    .sheet {
+      width: 8.2rem; aspect-ratio: 8.5 / 11; margin: 0 auto;
+      background: #FBFAF4; color: #1C1C18;
+      transform: rotate(-1.6deg);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.8);
+      padding: 0.65rem 0.6rem;
+      overflow: hidden;
+    }
+    .sheet pre { font-family: var(--source); font-size: 5.5px; line-height: 1.6; color: #1C1C18; }
+    .sheet pre .faint { color: #8B8A80; }
+    .p-spec .p-title { font-family: var(--source); font-size: 0.95rem; letter-spacing: 0.08em; color: var(--ivory); }
+    .p-spec .billing { color: #575750; }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 5rem; border-top: 1px solid var(--wall-hair); padding-top: 1.5rem;
+      text-align: center;
+      font-family: var(--serial); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--dim); line-height: 2.6;
+    }
+    footer a:hover { color: var(--ivory); }
+
+    @media (max-width: 520px) {
+      .mast { padding: 3.5rem 0 3rem; }
+      .billing { font-size: 0.46rem; }
+    }
+  </style>
 </head>
 <body>
-  <main class="page">
+  <div class="lobby">
 
-    <header class="masthead">
-      <img class="mark" src="/combined.png" alt="X-AMZ">
-      <h1 class="wordmark">X-AMZ LLC</h1>
-      <p class="tagline">independent software</p>
+    <header class="mast">
+      <p class="presents">An Independent Software Company in Seattle Presents</p>
+      <h1>X-AMZ</h1>
+      <div class="rule" aria-hidden="true"></div>
     </header>
 
-    <hr>
+    <main class="wall" aria-label="Products, now showing and coming soon">
 
-    <section class="sites" aria-label="Product domains">
-      <a class="site site--byte-glass" href="https://byte.glass">
-        <img class="site-icon" src="/icons/blob.png" alt="">
-        <span class="site-name">byte.glass</span>
-        <span class="site-arrow" aria-hidden="true">&rarr;</span>
-        <span class="site-desc">Tools for seeing bytes clearly.</span>
+      <!-- 01 requiem -->
+      <a class="poster p-requiem" href="https://requiem.rest">
+        <p class="tagline">The request is a document.</p>
+        <div class="keyart">
+          <div>
+            <canvas id="seal" aria-label="Engraved seal pressed from SHA-256 of requiem"></canvas>
+            <p class="seal-note">sealed · sha-256("requiem")</p>
+          </div>
+        </div>
+        <p class="p-title">requiem</p>
+        <p class="billing">x-amz presents · a .http document · with req.to and http-files.org<br>type ivypresto · juliamono · b612 · seal pressed on canvas at load</p>
+        <p class="release">Now on the App Store · v0.3.1</p>
       </a>
-      <a class="site site--requiem-rest" href="https://requiem.rest">
-        <img class="site-icon" src="/icons/requiem.png" alt="">
-        <span class="site-name">requiem.rest</span>
-        <span class="site-arrow" aria-hidden="true">&rarr;</span>
-        <span class="site-desc">.http for Apple Shortcuts.</span>
-      </a>
-      <a class="site site--http-files" href="https://http-files.org">
-        <img class="site-icon" src="/icons/http-file.svg" alt="">
-        <span class="site-name">http-files.org</span>
-        <span class="site-arrow" aria-hidden="true">&rarr;</span>
-        <span class="site-desc">Community spec for the .http file format.</span>
-      </a>
-    </section>
 
-    <hr>
+      <!-- 02 blob -->
+      <a class="poster p-blob" href="https://byte.glass/blob/">
+        <p class="tagline" style="color:#3E5A49">Two hundred fifty-six faces.</p>
+        <div class="keyart">
+          <div>
+            <div class="cell8" aria-label="Braille cell for the byte 0x62">
+              <i class="off"></i><i class="off"></i>
+              <i class="on"></i><i class="off"></i>
+              <i class="off"></i><i class="on"></i>
+              <i class="on"></i><i class="off"></i>
+            </div>
+            <p class="cell-note">⡢ = 0x62 = "b"</p>
+          </div>
+        </div>
+        <p class="p-title">blob</p>
+        <p class="billing">a byte.glass picture · shot entirely in u+2800–28ff · every frame decodes<br>also appearing as swift-base256-blob · spm · public</p>
+        <p class="release">Now on the App Store</p>
+      </a>
+
+      <!-- 03 Signs & Tokens -->
+      <div class="poster p-sigtok" aria-label="Signs and Tokens — coming soon">
+        <p class="tagline">Every key knows its account.</p>
+        <div class="keyart">
+          <canvas id="rings" aria-label="Woven ring engraving derived from the AWS documentation example access key"></canvas>
+        </div>
+        <p class="p-title">Signs &amp; Tokens</p>
+        <p class="billing">x-amz presents · featuring sigv4 and webauthn · with iam.pub<br>exporting dev.amz.cred and dev.amz.sigv4 · engraved from real key material</p>
+        <p class="release soon">Coming Soon…</p>
+      </div>
+
+      <!-- 04 iam.pub -->
+      <a class="poster p-iam" href="https://iam.pub">
+        <p class="tagline">Prove it.</p>
+        <div class="keyart">
+          <div>
+            <div class="dossier"><pre id="dossier-art" aria-label="Random-art portrait of SHA-256 of iam.pub"></pre></div>
+            <p class="mrz" id="iam-mrz"></p>
+          </div>
+        </div>
+        <p class="p-title">iam.pub</p>
+        <p class="billing">a webauthn oidc identity provider · portrait drawn by the drunken bishop<br>final mrz digit is a real 7-3-1 check digit</p>
+        <p class="release">Now Showing at iam.pub</p>
+      </a>
+
+      <!-- 05 byte glass -->
+      <a class="poster p-glass" href="https://byte.glass">
+        <p class="tagline" style="color:#47544B">From the makers of blob.</p>
+        <div class="keyart">
+          <div class="monolith" aria-label="A glass monolith of JSON">
+<pre>{"pane":"orders",
+ "rows":128,
+ "cols":["id","sku",
+  "qty","state"],
+ "sort":"-ts",
+ "filter":{"state":
+  "open"},
+ "view":"dense",
+ "cursor":"0x2F",
+ "pane":"orders",
+ "rows":128,
+ "cols":["id","sku",
+  "qty","state"],
+ "sort":"-ts",
+ "view":"dense"}</pre>
+          </div>
+        </div>
+        <p class="p-title">byte glass</p>
+        <p class="billing">a terminal for json · dense semantic layout · from the data domain<br>a byte.glass production</p>
+        <p class="release soon">Coming Soon…</p>
+      </a>
+
+      <!-- 06 hmac.sh -->
+      <a class="poster p-hmac" href="https://hmac.sh">
+        <p class="tagline" style="color:#6E5A34">Nothing is lost in the chain.</p>
+        <div class="keyart">
+          <div class="chain" aria-label="The SigV4 HMAC derivation chain, real values">
+            <div class="link"><span class="lbl">kDate</span>⣚⣅⠢⢵⢴⢳⣌⣜⠆⡒⠟⣶</div>
+            <div class="drop"></div>
+            <div class="link"><span class="lbl">kRegion</span>⣰⣷⠀⢛⡤⣊⢗⢍⢹⢼⣓⠣</div>
+            <div class="drop"></div>
+            <div class="link"><span class="lbl">kService</span>⢉⣁⡯⣵⣳⡲⢩⠹⢥⢇⣜⠜</div>
+            <div class="drop"></div>
+            <div class="link"><span class="lbl">kSigning</span>⣯⡿⠂⡭⢴⢝⣾⢐⢩⣃⡾⣿</div>
+          </div>
+        </div>
+        <p class="p-title">hmac.sh</p>
+        <p class="billing">featuring hmac-sha256 · the sigv4 derivation, aws docs example key<br>20260806 · us-east-1 · sts · every link verifiable with openssl</p>
+        <p class="release">Now Showing at hmac.sh</p>
+      </a>
+
+      <!-- 07 x-amz.date -->
+      <a class="poster p-date" href="https://x-amz.date">
+        <p class="tagline" style="color:#55554E">The release date is the feature.</p>
+        <div class="keyart">
+          <div class="datecard">
+            <p class="big" id="date-big">··.··</p>
+            <p class="yr" id="date-yr">····</p>
+            <div class="code" id="date-code"></div>
+            <p class="iso" id="date-iso">this poster renders the moment you load it</p>
+          </div>
+        </div>
+        <p class="p-title">x-amz.date</p>
+        <p class="billing">a timestamp service · the barcode is code 128 with a valid check symbol<br>scan it to check the clock</p>
+        <p class="release">Now Showing · Continuously</p>
+      </a>
+
+      <!-- 08 req.to -->
+      <a class="poster p-req" href="https://req.to">
+        <p class="tagline" style="color:#6E5A34">The shortest path to the request.</p>
+        <div class="keyart">
+          <div class="corridor" aria-label="A corridor of shrinking req.to links">
+            <div class="c1">req.to/9f3</div>
+            <div class="c2">req.to/9f3</div>
+            <div class="c3">req.to/9f3</div>
+            <div class="c4">req.to/9f3</div>
+            <div class="c5">req.to/9f3</div>
+            <div class="end">●</div>
+          </div>
+        </div>
+        <p class="p-title">req.to</p>
+        <p class="billing">universal links for .http · opens straight into requiem<br>no interstitial · no redirect chain</p>
+        <p class="release">Now Showing at req.to</p>
+      </a>
+
+      <!-- 09 http-files.org -->
+      <a class="poster p-spec" href="https://http-files.org">
+        <p class="tagline" style="color:#575750">Plain text survives everything.</p>
+        <div class="keyart">
+          <div class="sheet" aria-label="A plain-text specification sheet">
+<pre>Community Memo
+Category: Informational
+<span class="faint">Status: Living Document</span>
+
+  The .http File Format
+
+<span class="faint">1. Introduction</span>
+   A .http file is a
+   plain-text document
+   describing HTTP
+   requests as written
+   on the wire.
+
+<span class="faint">2. Example</span>
+   GET https://…
+   accept: text/html</pre>
+          </div>
+        </div>
+        <p class="p-title">The .http File Format</p>
+        <p class="billing">a community document · 72 columns · vendor-neutral · stewarded, not owned<br>with requiem and swift-http-files</p>
+        <p class="release">Now Showing at http-files.org</p>
+      </a>
+
+    </main>
 
     <footer>
-      <span>Seattle</span>
-      <span class="sep" aria-hidden="true">·</span>
-      <a href="mailto:support@x-amz.dev">support@x-amz.dev</a>
+      <p>
+        <a href="https://byte.glass">byte.glass</a> · <a href="https://requiem.rest">requiem.rest</a> · <a href="https://http-files.org">http-files.org</a><br>
+        X-AMZ LLC · Seattle · <a href="mailto:support@x-amz.dev">support@x-amz.dev</a> · <a href="https://github.com/x-amz">github.com/x-amz</a>
+      </p>
     </footer>
 
-  </main>
+  </div>
+
+  <script src="/js/sha256.js"></script>
+  <script src="/js/ornaments.js"></script>
+  <script src="/js/code128.js"></script>
+  <script src="/js/rings.js"></script>
+  <script>
+  (function () {
+    // 01 requiem — the seal, pressed from the product's own name
+    Ornaments.seal(document.getElementById('seal'), SHA256.bytes('requiem'), {
+      size: 150,
+      ink: '#C49A2C',
+      lo: 'rgba(196,154,44,0.35)',
+      hi: 'rgba(232,221,200,0.16)'
+    });
+
+    // 03 Signs & Tokens — woven rings, key threaded through its account
+    function drawRings() {
+      Rings.wovenAkid(document.getElementById('rings'), 'AKIAIOSFODNN7EXAMPLE', {
+        size: 200, keyMode: 'thread',
+        colA: 'rgba(201,162,39,0.85)', colB: 'rgba(110,106,88,0.6)',
+        echoA: 'rgba(201,162,39,0.28)', echoB: 'rgba(110,106,88,0.2)',
+        colKey: 'rgba(230,224,206,0.85)', echoKey: 'rgba(230,224,206,0.22)'
+      });
+    }
+    drawRings();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawRings);
+
+    // 04 iam.pub — randomart portrait + MRZ with a real check digit
+    document.getElementById('dossier-art').textContent =
+      Ornaments.drunkenBishop(SHA256.bytes('iam.pub'), ' IAM.PUB ');
+    var mrzText = 'IAM<PUB<<WEBAUTHN<OIDC<IDP<<NOW<SHOWING';
+    var pad = new Array(Math.max(0, 43 - mrzText.length) + 1).join('<');
+    document.getElementById('iam-mrz').innerHTML =
+      (mrzText + pad).replace(/</g, '&lt;') +
+      '<span class="ck">' + Ornaments.mrzCheck(mrzText + pad) + '</span>';
+
+    // 07 x-amz.date — the date card renders now
+    var now = new Date();
+    function p2(n) { return (n < 10 ? '0' : '') + n; }
+    document.getElementById('date-big').textContent = p2(now.getUTCMonth() + 1) + '.' + p2(now.getUTCDate());
+    document.getElementById('date-yr').textContent = String(now.getUTCFullYear());
+    var iso = now.toISOString().slice(0, 19) + 'Z';
+    try {
+      document.getElementById('date-code').innerHTML = Code128.svg(iso, 1.3, 44, '#E6E1D3');
+      document.getElementById('date-iso').textContent = iso + ' utc · rendered at load';
+    } catch (e) { /* barcode stays empty; caption keeps its default */ }
+  })();
+  </script>
 </body>
 </html>
