@@ -1,0 +1,73 @@
+<!-- x-amz.date -->
+<style>
+    /* ═══ x-amz.date — the spine and the band ═══ */
+    .p-date { --acc: #E6E1D3; background: #060605; }
+    .p-date .inner { display: grid; grid-template-columns: 1fr auto; flex: 1; min-height: 0; }
+    .p-date .spine {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 1rem 0 1rem 1.1rem;
+    }
+    .p-date .spine span {
+      font-family: var(--serial); font-weight: 700; font-size: 1.55rem;
+      line-height: 1.02; color: #FFFFFF; letter-spacing: 0.02em;
+    }
+    .p-date .spine span.sep { color: #55554E; }
+    .p-date .side {
+      writing-mode: vertical-rl; text-orientation: mixed;
+      font-family: var(--serial); font-size: 0.44rem; letter-spacing: 0.24em;
+      text-transform: uppercase; color: #55554E;
+      padding: 1.1rem 0.85rem; text-align: right;
+    }
+    .p-date .band {
+      background: #E6E1D3; padding: 0.5rem 0.8rem 0.4rem;
+    }
+    .p-date .band svg { display: block; width: 100%; height: 2.2rem; }
+    .p-date .band .lbl {
+      font-family: var(--serial); font-size: 0.38rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #3A3A34; margin-top: 0.2rem;
+    }
+    .p-date .foot { padding: 0.8rem 1.1rem 1rem; }
+    .p-date .title {
+      font-family: var(--serial); font-weight: 700; font-size: 1.05rem;
+      letter-spacing: 0.16em; color: #E6E1D3;
+    }
+    .p-date .spec { color: #5C5C54; }
+    .p-date .status { font-size: 0.46rem; color: #9A9A90; margin-top: 0.2rem; }
+</style>
+
+      <a class="poster poster--site p-date" href="https://x-amz.date">
+        <div class="inner">
+          <div class="spine" id="date-spine"></div>
+          <div class="side">x-amz-date · 16 bytes · no-store</div>
+        </div>
+        <div class="band">
+          <div id="date-code"></div>
+          <p class="lbl" id="date-lbl">code 128 · rendered at load</p>
+        </div>
+        <div class="foot">
+          <p class="title">x-amz.date</p>
+          <p class="spec">a cloudfront function returning yyyymmddThhmmssZ — the value the<br>x-amz-date header takes when you sign an aws request by hand</p>
+          <p class="status">live · continuously</p>
+        </div>
+      </a>
+
+<script>
+    // ── x-amz.date — the served value, rendered now, in the served format.
+    var now = new Date();
+    function p2(n) { return (n < 10 ? '0' : '') + n; }
+    var stamp = now.getUTCFullYear() + p2(now.getUTCMonth() + 1) + p2(now.getUTCDate()) +
+                'T' + p2(now.getUTCHours()) + p2(now.getUTCMinutes()) + p2(now.getUTCSeconds()) + 'Z';
+    var spineEl = document.getElementById('date-spine');
+    if (spineEl) {
+      Array.from(stamp).forEach(function (ch) {
+        var s = document.createElement('span');
+        s.textContent = ch;
+        if (ch === 'T' || ch === 'Z') s.className = 'sep';
+        spineEl.appendChild(s);
+      });
+    }
+    try {
+      document.getElementById('date-code').innerHTML = Code128.svg(stamp, 1.3, 44, '#141410');
+      document.getElementById('date-lbl').textContent = stamp + ' · code 128 · scan to check the clock';
+    } catch (e) { /* the band keeps its default caption */ }
+</script>

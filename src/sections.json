@@ -1,0 +1,40 @@
+[
+  {
+    "title": "My .http work",
+    "sub": "the client, and the link that opens it",
+    "posters": [
+      "requiem",
+      "req",
+      "shf"
+    ]
+  },
+  {
+    "title": "The .http standard",
+    "sub": "the format, written down and measured",
+    "posters": [
+      "spec",
+      "vet"
+    ]
+  },
+  {
+    "title": "AWS",
+    "sub": "identity, credentials, signing",
+    "posters": [
+      "sigtok",
+      "iam",
+      "arn",
+      "date",
+      "sigv4"
+    ]
+  },
+  {
+    "title": "Data",
+    "sub": "tools for seeing bytes clearly",
+    "posters": [
+      "glass",
+      "blob",
+      "b256",
+      "hmac"
+    ]
+  }
+]

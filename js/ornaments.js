@@ -62,11 +62,14 @@
     return { pts: pts, W: W, H: H };
   }
 
-  // ── Base256: one braille glyph per byte (U+2800 + byte) ──
+  // ── Base256: one braille glyph per byte, via the shipped codec table ──
+  // Delegates to js/base256.js. The mapping is a fixed permutation of the Braille
+  // block, not 0x2800 + byte — see that file for the nibble/dot-column law.
   function braille(bytes) {
-    var out = '';
-    for (var i = 0; i < bytes.length; i++) out += String.fromCodePoint(0x2800 + bytes[i]);
-    return out;
+    var root = typeof globalThis !== 'undefined' ? globalThis : global;
+    var b256 = (global && global.Base256) || root.Base256;
+    if (!b256) throw new Error('Ornaments.braille requires js/base256.js');
+    return b256.encode(bytes);
   }
 
   // ── ICAO 9303 7-3-1 check digit ──

@@ -1,0 +1,67 @@
+<!-- requiem -->
+<style>
+    /* ═══ requiem — the seal, at monumental scale ═══ */
+    .p-requiem {
+      --acc: #C49A2C;
+      background: radial-gradient(ellipse at 50% 42%, #2B090C 0%, #170709 46%, #0C0A0E 100%);
+      align-items: center; text-align: center;
+      padding: 2.2rem 1.3rem 1.3rem;
+    }
+    .p-requiem .title {
+      font-family: var(--ivy); font-size: 3.4rem; line-height: 0.9;
+      color: #E8DDC8;
+    }
+    .p-requiem .sub {
+      font-family: var(--ivy); font-style: italic; font-size: 0.86rem;
+      color: #8A6A55; margin-top: 0.3rem;
+    }
+    .p-requiem .sealwrap { flex: 1; display: grid; place-content: center; min-height: 0; padding: 0.7rem 0; }
+    .p-requiem canvas { width: 10.5rem; max-width: 100%; height: auto; aspect-ratio: 1; display: block; }
+    .p-requiem .seed {
+      font-family: var(--serial); font-size: 0.42rem; letter-spacing: 0.13em;
+      text-transform: uppercase; color: #7A5F52; line-height: 1.7;
+    }
+    .p-requiem .doc {
+      font-family: var(--source); font-size: 0.4rem; line-height: 1.6;
+      color: #6E5544; text-align: left; margin-top: 0.5rem;
+      display: inline-block; white-space: pre;
+    }
+    .p-requiem .status { color: #C49A2C; margin-top: 0.7rem; font-size: 0.52rem; }
+</style>
+
+      <a class="poster poster--app p-requiem" href="https://requiem.rest">
+        <p class="title">requiem</p>
+        <p class="sub">.http for Shortcuts</p>
+        <div class="sealwrap">
+          <canvas id="seal" aria-label="Seal pressed from the SHA-256 of the document printed below"></canvas>
+        </div>
+        <p class="seed">RequestModel.hash — sha-256 of the document below, first 16 bytes<br><span id="seal-seed">·</span></p>
+        <pre class="doc" id="requiem-doc"># requiem.http
+GET https://requiem.rest
+accept: text/html
+
+###
+
+GET https://req.to/9f3
+accept: message/http</pre>
+        <p class="status">App Store</p>
+      </a>
+
+<script>
+    // ── requiem — the seal is the one the app itself presses. RequestModel.hash
+    //    (Requiem/data/RequestModel.swift:55) is SHA-256 over the document's UTF-8
+    //    bytes truncated to the first 16, and it is the app's real identity for every
+    //    document it imports. The seed is printed beneath the seal, so a reader can
+    //    shasum the document and land on the same 32 characters.
+    var docEl = document.getElementById('requiem-doc');
+    if (docEl) {
+      var docText = docEl.textContent;
+      var digest = SHA256.bytes(docText);
+      var hex = digest.map(function (b) { return (b < 16 ? '0' : '') + b.toString(16); }).join('');
+      document.getElementById('seal-seed').textContent = hex.slice(0, 32) + '…';
+      Ornaments.seal(document.getElementById('seal'), digest, {
+        size: 320, ink: '#C49A2C',
+        lo: 'rgba(196,154,44,0.38)', hi: 'rgba(232,221,200,0.16)'
+      });
+    }
+</script>

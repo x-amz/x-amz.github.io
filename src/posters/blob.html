@@ -1,0 +1,82 @@
+<!-- blob -->
+<style>
+    /* ═══ blob — the action rail ═══ */
+    .p-blob { --acc: #00FF66; background: #030705; padding: 1.1rem 1rem; }
+    .p-blob .kick {
+      font-family: var(--source); font-size: 0.48rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #18B551;
+    }
+    .p-blob .rail { flex: 1; min-height: 0; margin-top: 0.7rem; display: flex; flex-direction: column; }
+    .p-blob .grp {
+      font-family: var(--serial); font-size: 0.4rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: #4E6B58; margin-bottom: 0.3rem;
+    }
+    .p-blob .acts { list-style: none; display: grid; gap: 0.1rem; margin-bottom: 0.7rem; }
+    .p-blob .acts.two { grid-template-columns: 1fr 1fr; column-gap: 0.8rem; }
+    .p-blob .acts li {
+      font-family: var(--source); font-size: 0.52rem; line-height: 1.5; color: #B6E4C2;
+      display: grid; grid-template-columns: 1.3rem 1fr; gap: 0.3rem;
+    }
+    .p-blob .acts li b { color: #18B551; font-weight: 400; }
+    .p-blob .chain {
+      font-family: var(--source); font-size: 0.4rem; line-height: 1.6;
+      color: #4E6B58; margin-bottom: 0.28rem;
+    }
+    .p-blob .recs {
+      list-style: none; display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0.08rem 0.5rem; margin-bottom: 0.8rem;
+    }
+    .p-blob .recs li {
+      font-family: var(--source); font-size: 0.44rem; line-height: 1.5; color: #6A8F77;
+    }
+    .p-blob .recs li b { color: #18B551; font-weight: 400; margin-right: 0.25rem; }
+    .p-blob .recs li.hit { color: #D7FFE3; }
+    .p-blob .recs li.hit b { color: #00FF66; }
+    .p-blob .hr { height: 1px; background: #143A22; margin: auto 0 0.6rem; }
+    .p-blob .trip { font-family: var(--source); font-size: 0.46rem; line-height: 1.9; color: #6A8F77; }
+    .p-blob .trip .v { color: #00FF66; font-size: 0.72rem; text-shadow: 0 0 9px rgba(0,255,102,0.5); }
+    .p-blob .title {
+      font-family: var(--source); font-size: 2.6rem; letter-spacing: -0.02em;
+      color: #00FF66; text-shadow: 0 0 12px rgba(0,255,102,0.45); margin-top: 0.4rem;
+    }
+    .p-blob .spec { color: #4E6B58; text-transform: none; letter-spacing: 0.02em; }
+    .p-blob .status { color: #D7FFE3; font-size: 0.52rem; margin-top: 0.35rem; }
+</style>
+
+      <a class="poster poster--app p-blob" href="https://byte.glass/blob/">
+        <p class="kick">shortcuts actions · dev.amz.blob</p>
+        <div class="rail">
+          <p class="grp">bytes in</p>
+          <ol class="acts">
+            <li><b>01</b> Read Bytes</li>
+            <li><b>02</b> Random Bytes</li>
+            <li><b>03</b> Substring</li>
+          </ol>
+          <p class="chain">Read Bytes · auto_detect tries eight recognizers in order,
+and stops at the first that accepts:</p>
+          <ol class="recs">
+            <li><b>1</b> binary</li><li><b>2</b> decimal</li>
+            <li><b>3</b> hex</li><li><b>4</b> base32</li>
+            <li class="hit"><b>5</b> base64</li><li><b>6</b> base64url</li>
+            <li><b>7</b> xxd</li><li><b>8</b> utf8</li>
+          </ol>
+          <p class="grp">bytes out</p>
+          <ol class="acts two">
+            <li><b>04</b> Print Bytes</li>
+            <li><b>05</b> Print Text</li>
+            <li><b>06</b> Print Hex</li>
+            <li><b>07</b> Print Base64</li>
+            <li><b>08</b> Print Base32</li>
+            <li><b>09</b> Print Binary</li>
+            <li><b>10</b> Print Decimal</li>
+            <li><b>11</b> Print xxd</li>
+          </ol>
+          <div class="hr"></div>
+          <p class="trip">Read Bytes("SGVsbG8=", auto)<br>
+            <span class="v">⠊⢖⠞⠞⢾</span><br>
+            Print Hex → 48 65 6c 6c 6f</p>
+        </div>
+        <p class="title">blob</p>
+        <p class="spec">base-256 braille codec · u+2800–28ff<br>auto_detect tries 8 recognizers in order; blob is never guessed<br>codec ships as swift-base256-blob, mit</p>
+        <p class="status">App Store</p>
+      </a>

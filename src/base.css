@@ -1,0 +1,152 @@
+
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 400 900; src: url('/fonts/BodoniModa-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Bodoni Moda'; font-style: italic; font-weight: 400 900; src: url('/fonts/BodoniModa-Italic-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; src: url('/fonts/InstrumentSerif-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('/fonts/InstrumentSerif-Italic-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 400; src: url('/fonts/JuliaMono-Regular.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 700; src: url('/fonts/JuliaMono-Bold.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400; src: url('/fonts/B612Mono-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 700; src: url('/fonts/B612Mono-Bold-latin.woff2') format('woff2'); font-display: swap; }
+
+    :root {
+      --jet: #000000;
+      --wall-hair: #1A1A1A;
+      --ivory: #E6E1D3;
+      --dim: #7E7E74;
+      --gold: #C9A227;
+      --bodoni: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+      --ivy: 'IvyPresto Headline', 'Instrument Serif', 'Bodoni 72', Didot, Georgia, serif;
+      --source: 'JuliaMono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --serial: 'B612 Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; color-scheme: dark; }
+    body {
+      background: var(--jet);
+      color: var(--ivory);
+      font-family: var(--serial);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    .lobby { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+    /* ── Masthead ── */
+    .mast { text-align: center; padding: 5rem 0 4.5rem; }
+    .mast .eyebrow {
+      font-family: var(--serial); font-size: 0.62rem; font-weight: 400;
+      letter-spacing: 0.42em; text-transform: uppercase; color: var(--dim);
+    }
+    .mast h1 {
+      font-family: var(--bodoni); font-weight: 900;
+      font-size: clamp(5rem, 17vw, 11rem); line-height: 0.92;
+      color: #FFFFFF;
+      transform: scaleX(0.78);
+      letter-spacing: 0.01em;
+      margin-top: 1rem;
+    }
+    .mast .rule { width: 8rem; height: 1px; background: var(--gold); margin: 2rem auto 0; }
+
+    /* ── Domain sections ── */
+    .domain { margin-top: 4.5rem; }
+    .domain:first-of-type { margin-top: 0; }
+    .domain-head {
+      display: flex; align-items: baseline; gap: 1rem;
+      margin-bottom: 1.7rem;
+    }
+    .domain-head h2 {
+      font-family: var(--serial); font-weight: 700; font-size: 0.68rem;
+      letter-spacing: 0.3em; text-transform: uppercase; color: var(--ivory);
+      white-space: nowrap;
+    }
+    .domain-sub {
+      font-family: var(--ivy); font-style: italic; font-size: 0.9rem;
+      color: var(--dim); white-space: nowrap;
+    }
+    .domain-rule { flex: 1; height: 1px; background: var(--wall-hair); }
+    .domain-n {
+      font-family: var(--serial); font-size: 0.58rem; letter-spacing: 0.2em;
+      color: var(--dim);
+    }
+    @media (max-width: 660px) {
+      .domain-head { flex-wrap: wrap; gap: 0.4rem 0.8rem; }
+      .domain-sub { white-space: normal; }
+    }
+
+    /* ── The wall ──
+       Poster footprint tracks the product's scope as envisioned, not its
+       current shipping state: applications large, services and standards
+       medium, single-purpose endpoints and libraries small. */
+    .wall {
+      display: flex; flex-wrap: wrap;
+      gap: 2.25rem;
+      align-items: flex-start;
+    }
+
+    .poster {
+      position: relative;
+      aspect-ratio: 27 / 40;
+      background: #030303;
+      border: 1px solid var(--wall-hair);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transition: border-color 0.18s ease, transform 0.18s ease;
+    }
+    a.poster:hover, a.poster:focus-visible { border-color: var(--acc, var(--gold)); transform: translateY(-3px); }
+    @media (prefers-reduced-motion: reduce) { .poster { transition: none; } }
+
+    /* Footprint variants — shape carries meaning.
+       Apps hold portrait, at phone proportion. Libraries lie landscape beneath
+       the apps they support. Sites and services sit between; the spec is a sheet
+       of paper and takes a paper's proportion. */
+    .poster { flex: 0 0 auto; width: clamp(300px, 30vw, 353px); }
+    .poster--app  { width: clamp(300px, 30vw, 353px); aspect-ratio: 27 / 40; }
+    .poster--service { width: clamp(300px, 30vw, 353px); aspect-ratio: 27 / 40; }
+    .poster--site { width: clamp(238px, 22vw, 266px); aspect-ratio: 27 / 40; }
+    .poster--lib  { width: clamp(300px, 63vw, 742px); aspect-ratio: 2.5 / 1; }
+    .poster--sheet { aspect-ratio: 8.5 / 11; }
+    @media (max-width: 900px) {
+      .poster--lib { width: 100%; aspect-ratio: 1.9 / 1; }
+    }
+    @media (max-width: 660px) {
+      .poster, .poster--app, .poster--site, .poster--lib { width: 100%; }
+      .poster--lib { aspect-ratio: 27 / 30; }
+    }
+
+    /* Sites carry the same body type — 7px is the floor — so only the display
+       sizes come down with the plate. */
+    .poster--site .status { font-size: 0.5rem; letter-spacing: 0.18em; }
+    .poster--site .spec { font-size: 0.4rem; line-height: 1.75; }
+    .p-req.poster--site .title { font-size: 1.75rem; }
+    .p-date.poster--site .spine span { font-size: 1.1rem; }
+    .p-date.poster--site .title { font-size: 0.85rem; letter-spacing: 0.12em; }
+    .p-hmac.poster--site .title { font-size: 1.3rem; }
+    .p-hmac.poster--site .step .sol { font-size: 3.6rem; }
+    .p-hmac.poster--site .step { grid-template-columns: 2rem 1fr; }
+    .p-hmac.poster--site .recipe { font-size: 0.32rem; }
+
+    /* The spec block. Real facts, typeset per-poster. Never the billing-block
+       squeeze: no scaleX, no forced nowrap, no single shared micro-caps strip. */
+    .spec {
+      font-family: var(--serial); font-size: 0.44rem;
+      letter-spacing: 0.06em; line-height: 1.85; text-transform: uppercase;
+      color: var(--dim);
+    }
+    .status {
+      font-family: var(--serial); font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ivory);
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 5rem; border-top: 1px solid var(--wall-hair); padding-top: 1.5rem;
+      text-align: center;
+      font-family: var(--serial); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--dim); line-height: 2.6;
+    }
+    footer a:hover { color: var(--ivory); }
+
+    @media (max-width: 520px) { .mast { padding: 3.5rem 0 3rem; } }

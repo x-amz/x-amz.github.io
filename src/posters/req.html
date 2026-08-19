@@ -1,0 +1,50 @@
+<!-- req.to -->
+<style>
+    /* ═══ req.to — the punched tape ═══ */
+    .p-req { --acc: #58A6FF; background: #0D1117; padding: 1rem 0.9rem; text-align: center; }
+    .p-req .kick {
+      font-family: var(--serial); font-size: 0.42rem; letter-spacing: 0.24em;
+      text-transform: uppercase; color: #484F58;
+    }
+    .p-req .tape {
+      flex: 1; min-height: 0; margin: 0.7rem 0; display: grid; place-items: center;
+      overflow: hidden;
+    }
+    .p-req .tape svg { height: 100%; width: auto; max-width: 100%; }
+    .p-req .rd {
+      font-family: var(--source); font-size: 0.42rem; line-height: 1.75;
+      color: #8B949E; text-align: left; display: inline-block; white-space: pre;
+    }
+    .p-req .rd .e { color: #58A6FF; }
+    .p-req .title {
+      font-family: var(--ivy); font-size: 2.3rem; color: #E6EDF3; line-height: 1; margin-top: 0.5rem;
+    }
+    .p-req .spec { color: #484F58; }
+    .p-req .status { color: #8B949E; font-size: 0.46rem; margin-top: 0.25rem; }
+</style>
+
+      <a class="poster poster--site p-req" href="https://req.to">
+        <p class="kick">universal link · the request travels in the fragment</p>
+        <div class="tape" id="req-tape" aria-label="8-level punched tape of the encoded request"></div>
+        <pre class="rd"><span class="e">req.to/#UE9TVCBodHRw…</span>
+POST https://httpbin.org/post
+content-type: application/json</pre>
+        <p class="title">req.to</p>
+        <p class="spec">http text split on blank lines, each section base64url, joined with "."<br>the fragment is never sent to the server — rfc 3986 §3.5<br>no account, no shortener table, nothing stored<br>universal links into requiem today · the req cli's home when it ships</p>
+        <p class="status">live · static · no server state</p>
+      </a>
+
+<script>
+    // ── req.to — punched tape of the real base64url payload.
+    var PAYLOAD = 'UE9TVCBodHRwczovL2h0dHBiaW4ub3JnL3Bvc3Q';
+    var tapeEl = document.getElementById('req-tape');
+    if (tapeEl) {
+      var bytes = [];
+      for (var t = 0; t < PAYLOAD.length; t++) bytes.push(PAYLOAD.charCodeAt(t));
+      tapeEl.innerHTML = Ornaments.tapeSVG(bytes.slice(0, 22), {
+        cell: 13, ink: '#58A6FF', dim: 'rgba(88,166,255,0.22)'
+      });
+      var svg = tapeEl.querySelector('svg');
+      if (svg) { svg.removeAttribute('width'); svg.removeAttribute('height'); svg.style.transform = 'rotate(90deg)'; }
+    }
+</script>

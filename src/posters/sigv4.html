@@ -1,0 +1,60 @@
+<!-- swift-sigv4 -->
+<style>
+    /* ═══ swift-sigv4 — the computation, laid on its side ═══ */
+    .p-sigv4 { --acc: #C9A227; background: #0A0A09; padding: 1.1rem 1.2rem; }
+    .p-sigv4 .run {
+      font-family: var(--serial); font-size: 0.52rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #E6E1D3;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .p-sigv4 .run em { font-style: normal; color: #7E7E74; font-size: 0.44rem; letter-spacing: 0.1em; }
+    .p-sigv4 .body {
+      flex: 1; min-height: 0; margin-top: 0.9rem;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem;
+      align-content: start;
+    }
+    .p-sigv4 .stage {
+      font-family: var(--serial); font-size: 0.4rem; letter-spacing: 0.16em;
+      text-transform: uppercase; color: #7E7E74;
+      border-top: 1px solid #2A2A26; padding-top: 0.3rem;
+    }
+    .p-sigv4 pre {
+      font-family: var(--source); font-size: 0.44rem; line-height: 1.7;
+      color: #A9A69B; white-space: pre-wrap; word-break: break-all; margin-top: 0.3rem;
+    }
+    .p-sigv4 .match {
+      margin-top: 0.7rem; border-top: 1px solid #C9A227; padding-top: 0.4rem;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .p-sigv4 .match b {
+      font-family: var(--serial); font-weight: 700; font-size: 0.72rem;
+      letter-spacing: 0.3em; color: #C9A227;
+    }
+    .p-sigv4 .match em { font-style: normal; font-family: var(--serial); font-size: 0.4rem; color: #7E7E74; letter-spacing: 0.1em; }
+    .p-sigv4 .foot { margin-top: 0.7rem; display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem; }
+    .p-sigv4 .spec { color: #5E5E56; }
+    .p-sigv4 .status { color: #A9A69B; font-size: 0.5rem; white-space: nowrap; }
+</style>
+
+      <a class="poster poster--lib p-sigv4" href="https://github.com/x-amz/swift-sigv4">
+        <p class="run">swift-sigv4 <em>AKIDEXAMPLE · iam · us-east-1</em></p>
+        <div class="body">
+          <p class="stage">1 · canonical request → sha-256</p>
+          <pre>f536975d06c0309214f805bb90ccff08
+9219ecd68b2577efef23edd43b7e1a59</pre>
+          <p class="stage">2 · string to sign</p>
+          <pre>AWS4-HMAC-SHA256
+20150830T123600Z
+20150830/us-east-1/iam/aws4_request</pre>
+          <p class="stage">3 · signature</p>
+          <pre>5d672d79c15b13162d9279b0855cfba6
+789a8edb4c82c400e06b5924a6f2b5d7</pre>
+          <div class="match">
+            <b>MATCH</b><em>aws general reference vector</em>
+          </div>
+        </div>
+        <div class="foot">
+          <p class="spec">every intermediate is a value you can print, diff and verify<br>day-scoped signing keys that cannot surrender the secret<br>inbound verification · presigned capability urls · zero dependencies</p>
+          <p class="status">public · mit · 0.3.0</p>
+        </div>
+      </a>

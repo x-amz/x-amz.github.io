@@ -1,0 +1,60 @@
+<!-- iam.pub -->
+<style>
+    /* ═══ iam.pub — the published modulus ═══ */
+    .p-iam { --acc: #667EEA; background: #000000; padding: 1rem 0.9rem; }
+    .p-iam .kick {
+      font-family: var(--source); font-size: 0.44rem; letter-spacing: 0.06em;
+      color: #667EEA;
+    }
+    .p-iam .field {
+      flex: 1; min-height: 0; margin-top: 0.7rem;
+      display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.4rem; align-content: start;
+    }
+    .p-iam .gut {
+      font-family: var(--serial); font-size: 0.36rem; line-height: 1.62;
+      color: #2E3452; text-align: right;
+    }
+    .p-iam .mod {
+      font-family: var(--source); font-size: 0.47rem; line-height: 1.62;
+      color: #8C9BE8; word-break: break-all; letter-spacing: 0.02em;
+    }
+    .p-iam .foot { margin-top: 0.6rem; }
+    .p-iam .title {
+      font-family: var(--ivy); font-size: 2.5rem; color: #E6E1D3; line-height: 1;
+    }
+    .p-iam .spec { color: #4A5170; }
+    .p-iam .status { color: #667EEA; font-size: 0.48rem; margin-top: 0.3rem; letter-spacing: 0.14em; }
+</style>
+
+      <a class="poster poster--service p-iam" href="https://iam.pub">
+        <p class="kick">GET /.well-known/jwks</p>
+        <div class="field">
+          <div class="gut" id="iam-gut"></div>
+          <div class="mod" id="iam-mod"></div>
+        </div>
+        <div class="foot">
+          <p class="title">iam.pub</p>
+          <p class="spec">rsa-2048 modulus · 342 base64url chars · 18 rows of 19<br>the only thing that must be public for a passkey to become an aws identity<br>jwk thumbprint rfc 7638 · VfHBk66fcwJ-uVXUYHtOq3IuP7eNAGALZI9NpMbxQhI</p>
+          <p class="status">live · rs256 · kid f21824fc · observed 2026-08-18</p>
+        </div>
+      </a>
+
+<script>
+    // ── iam.pub — the live modulus, split 18 × 19, with a character-offset gutter.
+    // Fetched from https://iam.pub/.well-known/jwks (kid f21824fc, RS256) on
+    // 2026-08-18. 342 base64url chars = 256 bytes = 2048 bits = 18 rows of 19.
+    var MOD = 'kEC9q9JTFDbtuGudWY2xoyQLbZiOM6UP0nMfBW5ZzJpJ24YG3ozRFVVjq09bWFluusSaCT3l' +
+              'z6kIp55fR43T5ljX3vzt6935-3KbU0fVAGwoD9mIlyAso2c3t14od_UNlde-E-ZT40AEjcYY' +
+              '4-Qh2UQrpNrzYdJIS25v4Pd5q0tycCefBZFWlADSqTtjt9ts2CImNt0gYJdv0hgpfBlj9t0E' +
+              'ZM0hhmwAhQYMiWy-Zwp-u8xhqenUSkewfi9CGwG5f4scqVVkRArqTzI2Bu6DyixLZjFXlC3L' +
+              't9UvyoqjVQ53Jge50I3lfH4XOK5YxjJ0Wp1EHwHBBj5M7wdG-i4oNw';
+    var gutEl = document.getElementById('iam-gut'), modEl = document.getElementById('iam-mod');
+    if (gutEl && modEl) {
+      var rows = [], offs = [];
+      for (var i = 0; i < 342; i += 19) { rows.push(MOD.slice(i, i + 19)); offs.push(i); }
+      modEl.textContent = rows.join('\n');
+      modEl.style.whiteSpace = 'pre';
+      gutEl.textContent = offs.join('\n');
+      gutEl.style.whiteSpace = 'pre';
+    }
+</script>

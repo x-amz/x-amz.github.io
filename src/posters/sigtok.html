@@ -1,0 +1,54 @@
+<!-- Signs & Tokens -->
+<style>
+    /* ═══ Signs & Tokens — the redline ═══ */
+    .p-sigtok {
+      --acc: #C9A227;
+      background: linear-gradient(172deg, #12130F 0%, #0A0B08 60%, #070805 100%);
+      padding: 1.15rem 1rem;
+    }
+    .p-sigtok .kick {
+      font-family: var(--serial); font-size: 0.44rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #6E6A58;
+    }
+    .p-sigtok .redline { flex: 1; min-height: 0; margin-top: 0.85rem; display: flex; flex-direction: column; justify-content: center; }
+    .p-sigtok .ln {
+      font-family: var(--source); font-size: 0.44rem; line-height: 1.75;
+      color: #8E8B7C; display: flex; gap: 0.35rem; margin-bottom: 0.1rem;
+    }
+    .p-sigtok .ln .bar { flex: 0 0 0.5rem; color: transparent; }
+    /* the change bar spans the whole changed block, not one glyph */
+    .p-sigtok .ln.add { border-left: 2px solid #C9A227; margin-left: -0.5rem; padding-left: 0.35rem; }
+    .p-sigtok .ln .txt { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .p-sigtok .ln.add { color: #C9A227; }
+    .p-sigtok .ln.add .bar { display: none; }
+    .p-sigtok .gap { height: 0.5rem; }
+    .p-sigtok .note {
+      font-family: var(--serial); font-size: 0.4rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #5E5B4E; margin-top: 0.7rem; line-height: 1.8;
+    }
+    .p-sigtok .foot { margin-top: auto; }
+    .p-sigtok .title {
+      font-family: var(--bodoni); font-weight: 700; font-size: 1.5rem;
+      color: #E6E1D3; line-height: 1.05; letter-spacing: 0.01em;
+    }
+    .p-sigtok .spec { color: #6E6A58; }
+    .p-sigtok .status { color: #9A9482; font-size: 0.48rem; margin-top: 0.3rem; letter-spacing: 0.14em; }
+</style>
+
+      <div class="poster poster--app p-sigtok" aria-label="Signs and Tokens — in development">
+        <p class="kick">the request goes in · the key does not come out</p>
+        <div class="redline">
+          <p class="ln"><span class="bar"> </span><span class="txt">GET https://iam.amazonaws.com/</span></p>
+          <p class="ln"><span class="bar"> </span><span class="txt">content-type: application/x-www-form-urlencoded</span></p>
+          <p class="ln"><span class="bar"> </span><span class="txt">host: iam.amazonaws.com</span></p>
+          <div class="gap"></div>
+          <p class="ln add"><span class="bar">│</span><span class="txt">x-amz-date: 20150830T123600Z</span></p>
+          <p class="ln add"><span class="bar">│</span><span class="txt">authorization: AWS4-HMAC-SHA256<br>Credential=AKIDEXAMPLE/20150830/us-east-1/iam/aws4_request,<br>SignedHeaders=content-type;host;x-amz-date,<br>Signature=5d672d79…a6f2b5d7</span></p>
+        </div>
+        <p class="note">two lines added · nothing removed<br>the secret never entered this document</p>
+        <div class="foot">
+          <p class="title">Signs &amp; Tokens</p>
+          <p class="spec">aws credentials, sealed · sigv4 signing via app intents<br>files exposes .cred handles — an arn and a key id, never a secret<br>utis dev.amz.cred · dev.amz.sigv4 · bundle dev.amz.sigtok</p>
+          <p class="status">in development · iphone</p>
+        </div>
+      </div>

@@ -1,0 +1,47 @@
+<!-- http-files.org -->
+<style>
+    /* ═══ http-files.org — bond paper, centered, letter proportion ═══ */
+    .p-spec {
+      --acc: #1C1C18; background: #FBFAF4; color: #1C1C18;
+      padding: 1.5rem 1.5rem 1.2rem; text-align: center;
+    }
+    .p-spec .hdr {
+      font-family: var(--source); font-size: 0.44rem; line-height: 1.9;
+      display: flex; justify-content: space-between; text-align: left; color: #1C1C18;
+    }
+    .p-spec .title {
+      font-family: var(--bodoni); font-weight: 500; font-size: 1.5rem;
+      margin: 1.5rem 0 0.2rem; line-height: 1.1;
+    }
+    .p-spec .kick { font-family: var(--source); font-size: 0.42rem; color: #8B8A80; }
+    .p-spec .doc {
+      font-family: var(--source); font-size: 0.44rem; line-height: 1.75;
+      text-align: left; margin: 1.1rem auto 0; display: inline-block; white-space: pre;
+    }
+    .p-spec .doc .c { color: #8B8A80; }
+    .p-spec .rule { height: 1px; background: #C9C7BC; margin: 1rem 0 0.6rem; }
+    .p-spec .spec { color: #6E6C62; text-transform: none; letter-spacing: 0.01em; font-size: 0.42rem; }
+    .p-spec .status { color: #1C1C18; font-size: 0.46rem; margin-top: 0.4rem; letter-spacing: 0.12em; }
+    .p-spec .foot { margin-top: auto; }
+</style>
+
+      <a class="poster poster--sheet poster--service p-spec" href="https://http-files.org">
+        <div class="hdr">
+          <span>Community Memo<br>Request for Comments: none<br>Category: Informational</span>
+          <span style="text-align:right">http-files.org<br>August 2026</span>
+        </div>
+        <p class="title">The .http File Format</p>
+        <p class="kick">vendor-neutral · stewarded, not owned</p>
+        <pre class="doc"><span class="c"># The .http File Format</span>
+@host = http-files.org
+GET /spec/basics/
+Host: {{host}}
+accept: text/html
+<span class="c">###</span>
+GET https://http-files.org/clients/overview/</pre>
+        <div class="foot">
+          <div class="rule"></div>
+          <p class="spec">17 features drafted · 103 anchored statements · 75 requirement · 28 refinement<br>.http 2026 — 6 features, 26 statements · .http 2027 — adds 3, 36 cumulative<br>adoption-blind: no feature records who implements it</p>
+          <p class="status">live · both manifests draft</p>
+        </div>
+      </a>

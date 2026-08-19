@@ -1,0 +1,74 @@
+<!-- hmac.sh -->
+<style>
+    /* ═══ hmac.sh — the fold ═══ */
+    .p-hmac { --acc: #58A6FF; background: #0D1117; padding: 1rem 0.9rem; }
+    .p-hmac .kick {
+      font-family: var(--source); font-size: 0.42rem; letter-spacing: 0.04em; color: #7D8590;
+    }
+    /* The solidus: every "/" in the path is one HMAC round, so the poster is the
+       slash. Four strokes fall on a diagonal and fuse into one mark at distance. */
+    .p-hmac .stair { flex: 1; min-height: 0; margin-top: 0.5rem; display: flex; flex-direction: column; justify-content: center; }
+    .p-hmac .step { display: grid; grid-template-columns: 2.9rem 1fr; align-items: center; gap: 0.3rem; }
+    .p-hmac .step + .step { margin-top: -0.15rem; }
+    .p-hmac .step .sol {
+      font-family: var(--bodoni); font-weight: 500; font-size: 5.2rem;
+      line-height: 0.86; color: #1F6FEB; text-align: center;
+    }
+    .p-hmac .step .seg {
+      font-family: var(--source); font-size: 0.52rem; color: #58A6FF;
+      letter-spacing: 0.04em; display: block;
+    }
+    .p-hmac .step .dg {
+      font-family: var(--source); font-size: 0.4rem; color: #8B949E;
+      word-break: break-all; display: block; line-height: 1.45;
+    }
+    .p-hmac .s1 { margin-left: 0; }
+    .p-hmac .s2 { margin-left: 0.9rem; }
+    .p-hmac .s3 { margin-left: 1.8rem; }
+    .p-hmac .s4 { margin-left: 2.7rem; }
+    .p-hmac .s4 .sol { color: #E6EDF3; }
+    .p-hmac .s4 .dg { color: #E6EDF3; }
+    .p-hmac .recipe {
+      font-family: var(--source); font-size: 0.36rem; line-height: 1.7;
+      color: #6E7681; white-space: pre-wrap; word-break: break-all; margin-top: 0.5rem;
+    }
+    .p-hmac .recipe b { color: #8B949E; font-weight: 400; }
+    .p-hmac .foot { margin-top: auto; }
+    .p-hmac .title {
+      font-family: var(--source); font-size: 1.75rem; color: #E6EDF3; letter-spacing: 0.02em;
+    }
+    .p-hmac .spec { color: #484F58; text-transform: none; letter-spacing: 0.02em; }
+    .p-hmac .status { color: #58A6FF; font-size: 0.46rem; margin-top: 0.25rem; }
+</style>
+
+      <a class="poster poster--site p-hmac" href="https://hmac.sh">
+        <p class="kick">hmac.sh/eC1hbXo/prod/data/hmac</p>
+        <div class="stair">
+          <div class="step s1">
+            <span class="sol">/</span>
+            <span><span class="seg">eC1hbXo</span><span class="dg">key ← base64url · 782d616d7a · "x-amz" · 5 B</span></span>
+          </div>
+          <div class="step s2">
+            <span class="sol">/</span>
+            <span><span class="seg">prod</span><span class="dg">Hr0zaEY84FmNOR8y0AQon-R2JyHG32v-NyCXwFI3P70</span></span>
+          </div>
+          <div class="step s3">
+            <span class="sol">/</span>
+            <span><span class="seg">data</span><span class="dg">6nNiv_5Gd2GXfN4vgQV0AoUmLpliOGGuuf4_vgevjgk</span></span>
+          </div>
+          <div class="step s4">
+            <span class="sol">/</span>
+            <span><span class="seg">hmac → 303 location</span><span class="dg">Lkm2jwu--qxw3F3hUpvsdKxfJFOzrHix-dhkqMuIcPo</span></span>
+          </div>
+        </div>
+        <pre class="recipe"><b>$</b> K=$(printf x-amz | xxd -p -c256)
+<b>$</b> for D in prod data hmac; do K=$(printf %s "$D" \
+    | openssl dgst -sha256 -mac HMAC -macopt hexkey:$K \
+    -binary | xxd -p -c256); done
+<b>$</b> printf %s "$K" | xxd -r -p | base64 | tr '+/' '-_' | tr -d '='</pre>
+        <div class="foot">
+          <p class="title">hmac.sh</p>
+          <p class="spec">every slash is one hmac-sha256 round — the digest keys the next<br>the redirect target is itself a valid key: /Lkm2jwu…/x-amz.dev → /jbi9t5al…<br>key ≤ 128 bytes decoded · segment ≤ 128 chars · cache-control no-store<br>observed 2026-08-18 · x-cache: FunctionGeneratedResponse from cloudfront</p>
+          <p class="status">live · at the cloudfront edge</p>
+        </div>
+      </a>

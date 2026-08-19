@@ -1,0 +1,85 @@
+<!-- http.vet -->
+<style>
+    /* ═══ http.vet — the conformance field ═══ */
+    .p-vet { --acc: #46C28E; background: #10151A; padding: 1.05rem 0.95rem; }
+    .p-vet .kick {
+      font-family: var(--serial); font-size: 0.44rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: #7D8B98;
+    }
+    .p-vet .lanes {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.2rem;
+      margin-top: 0.75rem; flex: 1; min-height: 0;
+    }
+    /* 67 ticks per lane divide the lane's height, whatever it is — one tick per
+       graded probe, so the column length is the corpus, not a rounded bar. */
+    .p-vet .lane { display: flex; flex-direction: column; gap: 1px; min-height: 0; }
+    .p-vet .lane i { display: block; flex: 1 1 0; min-height: 0; }
+    .p-vet .ok   { background: #46C28E; }
+    .p-vet .warn { background: #E3A63B; }
+    .p-vet .bad  { background: #E5534B; }
+    .p-vet .obs  { background: #242D36; }
+    .p-vet .names {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.2rem; margin-top: 0.4rem;
+    }
+    .p-vet .names span {
+      font-family: var(--source); font-size: 0.36rem; color: #7D8B98;
+      writing-mode: vertical-rl; text-orientation: mixed; height: 3.1rem; letter-spacing: 0.04em;
+    }
+    .p-vet .fracs { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.2rem; margin-top: 0.25rem; }
+    .p-vet .fracs span { font-family: var(--source); font-size: 0.4rem; color: #D6DEE6; text-align: center; }
+    .p-vet .foot { margin-top: auto; }
+    .p-vet .title {
+      font-family: var(--bodoni); font-weight: 600; font-size: 2.1rem;
+      color: #D6DEE6; line-height: 1;
+    }
+    .p-vet .spec { color: #4B5763; }
+    .p-vet .status { color: #46C28E; font-size: 0.5rem; margin-top: 0.3rem; }
+</style>
+
+      <a class="poster poster--service p-vet" href="https://http.vet">
+        <p class="kick">cross-client conformance · 2026-draft.1</p>
+        <div class="lanes" id="vet-lanes" aria-label="Seven client lanes, 67 graded probes each"></div>
+        <div class="names">
+          <span>ijhttp</span><span>httpyac</span><span>kulala</span><span>resterm</span><span>dotnet-httpie</span><span>httprunner</span><span>req</span>
+        </div>
+        <div class="fracs">
+          <span>44</span><span>46</span><span>45</span><span>42</span><span>39</span><span>48</span><span>46</span>
+        </div>
+        <div class="foot">
+          <p class="title">http.vet</p>
+          <p class="spec">83 probes per lane · supported · quirked · observed · not conforming<br>the figure is supported; ticks below it are the rest of the 83<br>each cell recomputed from the wire bytes its own report carries<br>req is the steward's own lane, graded with no special standing<br>kit httpvet 0.2.0 · spec 2bd5523 · corpus 0ec7f5e2 · run 2026-08-16 · cc0</p>
+          <p class="status">live · open for intake</p>
+        </div>
+      </a>
+
+<script>
+    // ── http.vet — 67 graded ticks per lane, from the published fractions.
+    // One tick per probe. Counts are read straight off the published reports in
+    // http.vet/reports/2026-draft.1 — [supported, quirked, observed, not-conforming],
+    // each row summing to the corpus's 83 probes. Nothing is scaled or rounded.
+    var LANES = [
+      [44, 11, 12, 16],  // ijhttp        2026.1
+      [46,  8, 11, 18],  // httpyac       6.16.7
+      [45,  8, 16, 14],  // kulala        0.14.2
+      [42, 10, 12, 19],  // resterm       0.51.3
+      [39,  9, 16, 19],  // dotnet-httpie 0.17.0
+      [48,  8, 14, 13],  // httprunner    1.1.54
+      [46, 10, 16, 11]   // req           0.1.0
+    ];
+    var CLS = ['ok', 'warn', 'obs', 'bad'];
+    var lanesEl = document.getElementById('vet-lanes');
+    if (lanesEl) {
+      LANES.forEach(function (counts) {
+        var lane = document.createElement('div');
+        lane.className = 'lane';
+        counts.forEach(function (n, band) {
+          for (var i = 0; i < n; i++) {
+            var tick = document.createElement('i');
+            tick.className = CLS[band];
+            lane.appendChild(tick);
+          }
+        });
+        lanesEl.appendChild(lane);
+      });
+    }
+</script>

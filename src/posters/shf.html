@@ -1,0 +1,53 @@
+<!-- swift-http-files -->
+<style>
+    /* ═══ swift-http-files — the layered library, supporting the client ═══ */
+    .p-shf { --acc: #C49A2C; background: #0B0A0C; padding: 1.1rem 1.2rem; flex-direction: row; gap: 1.4rem; align-items: stretch; }
+    .p-shf .stack { display: flex; flex-direction: column; justify-content: center; gap: 0.16rem; min-width: 0; flex: 0 0 21rem; }
+    .p-shf .tier {
+      display: flex; align-items: baseline; gap: 0.5rem;
+      border-left: 2px solid #2A2530; padding: 0.15rem 0 0.15rem 0.55rem;
+    }
+    .p-shf .tier .n {
+      font-family: var(--source); font-size: 0.72rem; color: #E6E1D3; letter-spacing: 0.01em;
+    }
+    .p-shf .tier .d {
+      font-family: var(--serial); font-size: 0.36rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #6E6A72; white-space: nowrap;
+    }
+    .p-shf .tier.dep { border-left-color: #C49A2C; }
+    .p-shf .tier.dep .n { color: #C49A2C; }
+    .p-shf .tier.dep .d { color: #8A7350; }
+    .p-shf .cli {
+      margin-top: 0.5rem; border-top: 1px solid #2A2530; padding-top: 0.4rem;
+      font-family: var(--source); font-size: 0.46rem; color: #9A93A2; line-height: 1.7;
+    }
+    .p-shf .cli b { color: #E6E1D3; font-weight: 400; }
+    .p-shf .side { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; }
+    .p-shf .kick {
+      font-family: var(--serial); font-size: 0.42rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #6E6A72; margin-bottom: auto;
+    }
+    .p-shf .title {
+      font-family: var(--source); font-size: 1.5rem; color: #E6E1D3; letter-spacing: -0.01em;
+    }
+    .p-shf .spec { color: #6E6A72; }
+    .p-shf .status { color: #C49A2C; font-size: 0.5rem; margin-top: 0.3rem; }
+</style>
+
+      <div class="poster poster--lib p-shf" aria-label="swift-http-files — release in preparation">
+        <div class="stack">
+          <div class="tier"><span class="n">HttpDisplayUI</span><span class="d">the only target touching uikit</span></div>
+          <div class="tier"><span class="n">HttpDisplay</span><span class="d">highlighting · formatting</span></div>
+          <div class="tier dep"><span class="n">HttpAws</span><span class="d">sigv4, carried alone → swift-sigv4</span></div>
+          <div class="tier"><span class="n">HttpFiles</span><span class="d">semantics · urlrequest · execution</span></div>
+          <div class="tier dep"><span class="n">ContentFormats</span><span class="d">formats · values → Base256</span></div>
+          <div class="tier"><span class="n">HttpSyntax</span><span class="d">tokenizer · no dependencies</span></div>
+          <p class="cli"><b>req</b> list · tokens · resolve · run · compare</p>
+        </div>
+        <div class="side">
+          <p class="kick">the library under requiem and req</p>
+          <p class="title">swift-http-files</p>
+          <p class="spec">six libraries, layered — a target links only what it needs<br>everything is a region or a transformer; there is no engine<br>position is the contract: a signer placed after resolve sees the resolved request<br>the result document is the file — valid .http at every step<br>req is one of http.vet's seven graded lanes, from source, no special standing</p>
+          <p class="status">release in preparation</p>
+        </div>
+      </div>
