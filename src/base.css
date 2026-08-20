@@ -1,25 +1,3 @@
-
-    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 400 900; src: url('/fonts/BodoniModa-var-latin.woff2') format('woff2'); font-display: swap; }
-    @font-face { font-family: 'Bodoni Moda'; font-style: italic; font-weight: 400 900; src: url('/fonts/BodoniModa-Italic-var-latin.woff2') format('woff2'); font-display: swap; }
-    @font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; src: url('/fonts/InstrumentSerif-Regular-latin.woff2') format('woff2'); font-display: swap; }
-    @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('/fonts/InstrumentSerif-Italic-latin.woff2') format('woff2'); font-display: swap; }
-    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 400; src: url('/fonts/JuliaMono-Regular.woff2') format('woff2'); font-display: swap; }
-    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 700; src: url('/fonts/JuliaMono-Bold.woff2') format('woff2'); font-display: swap; }
-    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400; src: url('/fonts/B612Mono-Regular-latin.woff2') format('woff2'); font-display: swap; }
-    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 700; src: url('/fonts/B612Mono-Bold-latin.woff2') format('woff2'); font-display: swap; }
-
-    :root {
-      --jet: #000000;
-      --wall-hair: #1A1A1A;
-      --ivory: #E6E1D3;
-      --dim: #7E7E74;
-      --gold: #C9A227;
-      --bodoni: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
-      --ivy: 'IvyPresto Headline', 'Instrument Serif', 'Bodoni 72', Didot, Georgia, serif;
-      --source: 'JuliaMono', ui-monospace, 'SF Mono', Menlo, monospace;
-      --serial: 'B612 Mono', ui-monospace, monospace;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 16px; color-scheme: dark; }
     body {
       background: var(--jet);
@@ -92,51 +70,35 @@
     .legend .k-planned::before  { border-color: #4A4A44; border-top-style: dotted; }
 
     /* ── The wall ──
+       Each slot is a frame the wall owns: its size and proportion are pinned
+       here, and the poster page renders inside it at whatever size it is given.
        Poster footprint tracks the product's scope as envisioned, not its
        current shipping state: applications large, services and standards
        medium, single-purpose endpoints and libraries small. */
 
     .poster {
       position: relative;
-      aspect-ratio: 27 / 40;
+      display: block;
       background: #030303;
       border: 1px solid var(--wall-hair);
-      display: flex; flex-direction: column;
       overflow: hidden;
       transition: border-color 0.18s ease, transform 0.18s ease;
     }
+    /* The frame carries the click, the hover ring and the lift; the poster
+       page inside is display only. */
+    .poster iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      border: 0; display: block; pointer-events: none; background: transparent;
+    }
     a.poster:hover, a.poster:focus-visible { border-color: var(--acc, var(--gold)); transform: translateY(-3px); }
 
-    /* Posters with nowhere to go. Without this they read as broken links: the
-       cursor says nothing, the plate does not lift, and the wall looks dead in
-       two places. The bar carries the real reason, not a generic "coming soon". */
-    .poster--unreleased { cursor: not-allowed; }
-    .poster--unreleased:hover { border-color: var(--dim); border-style: dashed; }
-    .poster--unreleased::after {
-      content: attr(data-unreleased);
-      position: absolute; left: 0; right: 0; bottom: 0;
-      padding: 0.55rem 0.7rem;
-      font-family: var(--serial); font-size: 0.5rem; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase; text-align: center;
-      color: var(--jet); background: var(--dim);
-      transform: translateY(100%);
-      transition: transform 0.18s ease;
-    }
-    .poster--unreleased:hover::after { transform: translateY(0); }
-    /* Where there is no hover there is also no click to mislead anyone, and the
-       status line already says as much — so the bar stays out of the way. */
-    @media (hover: none) { .poster--unreleased::after { content: none; } }
-
-    @media (prefers-reduced-motion: reduce) {
-      .poster { transition: none; }
-      .poster--unreleased::after { transition: none; }
-    }
+    @media (prefers-reduced-motion: reduce) { .poster { transition: none; } }
 
     /* Footprint variants — shape carries meaning.
        Apps hold portrait, at phone proportion. Libraries lie landscape beneath
        the apps they support. Sites and services sit between; the spec is a sheet
        of paper and takes a paper's proportion. */
-    .poster { flex: 0 0 auto; width: clamp(300px, 30vw, 353px); }
+    .poster { flex: 0 0 auto; width: clamp(300px, 30vw, 353px); aspect-ratio: 27 / 40; }
     .poster--app  { width: clamp(300px, 30vw, 353px); aspect-ratio: 27 / 40; }
     .poster--service { width: clamp(300px, 30vw, 353px); aspect-ratio: 27 / 40; }
     .poster--site { width: clamp(238px, 22vw, 266px); aspect-ratio: 27 / 40; }
@@ -144,39 +106,14 @@
     /* The composite library spans the apps it carries; the primitives below it
        are narrower, so width reads as reach. */
     .poster--shelf { width: 100%; aspect-ratio: 3.4 / 1; }
-    .poster--sheet { aspect-ratio: 8.5 / 11; }
+    .poster--sheet { width: clamp(300px, 30vw, 353px); aspect-ratio: 8.5 / 11; }
     @media (max-width: 900px) {
       .poster--lib { width: 100%; aspect-ratio: 1.9 / 1; }
       .poster--shelf { aspect-ratio: 2.4 / 1; }
     }
     @media (max-width: 660px) {
-      .poster, .poster--app, .poster--site, .poster--lib, .poster--shelf { width: 100%; }
+      .poster, .poster--app, .poster--site, .poster--lib, .poster--shelf, .poster--sheet { width: 100%; }
       .poster--lib, .poster--shelf { aspect-ratio: 27 / 30; }
-    }
-
-    /* Sites carry the same body type — 7px is the floor — so only the display
-       sizes come down with the plate. */
-    .poster--site .status { font-size: 0.5rem; letter-spacing: 0.18em; }
-    .poster--site .spec { font-size: 0.4rem; line-height: 1.75; }
-    .p-req.poster--site .title { font-size: 1.75rem; }
-    .p-date.poster--site .spine span { font-size: 1.1rem; }
-    .p-date.poster--site .title { font-size: 0.85rem; letter-spacing: 0.12em; }
-    .p-hmac.poster--site .title { font-size: 1.3rem; }
-    .p-hmac.poster--site .step .sol { font-size: 3.6rem; }
-    .p-hmac.poster--site .step { grid-template-columns: 2rem 1fr; }
-    .p-hmac.poster--site .recipe { font-size: 0.32rem; }
-
-    /* The spec block. Real facts, typeset per-poster. Never the billing-block
-       squeeze: no scaleX, no forced nowrap, no single shared micro-caps strip. */
-    .spec {
-      font-family: var(--serial); font-size: 0.44rem;
-      letter-spacing: 0.06em; line-height: 1.85; text-transform: uppercase;
-      color: var(--dim);
-    }
-    .status {
-      font-family: var(--serial); font-size: 0.58rem; font-weight: 700;
-      letter-spacing: 0.24em; text-transform: uppercase;
-      color: var(--ivory);
     }
 
     /* ── Footer ── */

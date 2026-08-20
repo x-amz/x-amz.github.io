@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" style="--ideal-w:1000px;--ideal-h:1500px;--kw:16.6;--kh:24;background:#060605">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>x-amz.date — X-AMZ</title>
+  <meta name="description" content="A CloudFront function returning the current time in the format the x-amz-date header takes.">
+  <link rel="canonical" href="https://x-amz.dev/poster/date/">
+  <meta property="og:title" content="x-amz.date — X-AMZ">
+  <meta property="og:description" content="A CloudFront function returning the current time in the format the x-amz-date header takes.">
+  <meta property="og:url" content="https://x-amz.dev/poster/date/">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <style>
+
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 400 900; src: url('/fonts/BodoniModa-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Bodoni Moda'; font-style: italic; font-weight: 400 900; src: url('/fonts/BodoniModa-Italic-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; src: url('/fonts/InstrumentSerif-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('/fonts/InstrumentSerif-Italic-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 400; src: url('/fonts/JuliaMono-Regular.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 700; src: url('/fonts/JuliaMono-Bold.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400; src: url('/fonts/B612Mono-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 700; src: url('/fonts/B612Mono-Bold-latin.woff2') format('woff2'); font-display: swap; }
+
+    :root {
+      --jet: #000000;
+      --wall-hair: #1A1A1A;
+      --ivory: #E6E1D3;
+      --dim: #7E7E74;
+      --gold: #C9A227;
+      --bodoni: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+      --ivy: 'IvyPresto Headline', 'Instrument Serif', 'Bodoni 72', Didot, Georgia, serif;
+      --source: 'JuliaMono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --serial: 'B612 Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── The poster page ──
+       One poster, full screen. The poster fills the viewport up to its ideal
+       size and stops; past that its backdrop bleeds to the edges. It does not
+       know its own proportion: the same markup composes portrait, square and
+       landscape, switching layout on the stage's aspect ratio.
+
+       Scale is the root font-size, so every rem inside a poster is one unit of
+       the poster's own measure. A poster declares its design size in units,
+       --kw across and --kh down, and the unit is whichever is smaller: the
+       stage width over --kw or its height over --kh. A poster designed 22
+       units across reads the same at 353px on the wall and at 1200px full
+       screen; one that also declares a height stops growing when the room
+       runs out in that direction. --ideal-w, --ideal-h, --kw, --kh and the
+       bleed are written onto <html> by build.py from the poster's header. */
+    :root {
+      --vh: 100vh;
+      --foot: 44px;                       /* the production line below the stage */
+      --stage-w: min(100vw, var(--ideal-w));
+      --stage-h: min(calc(var(--vh) - var(--foot)), var(--ideal-h));
+      font-size: min(calc(var(--stage-w) / var(--kw)), calc(var(--stage-h) / var(--kh)));
+      color-scheme: dark;
+    }
+    @supports (height: 100dvh) { :root { --vh: 100dvh; } }
+    /* Framed on the wall (/poster/<name>/#wall): no production line, the poster
+       is the whole viewport. */
+    :root:has(#wall:target) { --foot: 0px; }
+    #wall:target ~ .production { display: none; }
+
+    body {
+      min-height: var(--vh);
+      display: grid; grid-template-rows: 1fr auto; justify-items: center; align-items: center;
+      background: transparent; color: var(--ivory);
+      font-family: var(--serial); line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    .stage {
+      width: var(--stage-w); height: var(--stage-h);
+      container-type: size; container-name: stage;
+    }
+
+    .production {
+      height: var(--foot); display: inline-flex; align-items: center; padding: 0 16px;
+      font-family: var(--serial); font-size: 10px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--production, var(--dim));
+      transition: color 0.18s ease;
+    }
+    .production b { font-weight: 700; }
+    .production:hover { color: var(--production-hover, var(--ivory)); }
+
+    /* ── The poster itself ── */
+    .poster {
+      width: 100%; height: 100%;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      color: var(--ivory);
+    }
+    /* The common skeleton: a kicker line, the figure that takes the room, and a
+       foot carrying title, spec and status. Portrait stacks them. */
+    .poster > .fig { flex: 1 1 auto; min-height: 0; min-width: 0; }
+    .poster > .foot { margin-top: auto; }
+
+    /* Past a threshold the stack splits: figure left, foot right, kicker across
+       the top. A poster opts in with .split (from three-quarters square) or
+       .split-wide (from square — for figures that need the width), and may set
+       --cols and --gap. */
+    @container stage (min-aspect-ratio: 3 / 4) {
+      .poster.split {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .poster.split-wide {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split-wide > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split-wide > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split-wide > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+
+    /* The spec block. Real facts, typeset per-poster. Never the billing-block
+       squeeze: no scaleX, no forced nowrap, no single shared micro-caps strip. */
+    .spec {
+      font-family: var(--serial); font-size: 0.44rem;
+      letter-spacing: 0.06em; line-height: 1.85; text-transform: uppercase;
+      color: var(--dim);
+    }
+    .status {
+      font-family: var(--serial); font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ivory);
+    }
+    /* ═══ x-amz.date — the spine and the band ═══ */
+    .p-date { --acc: #E6E1D3; }
+    .p-date .fig { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+    .p-date .spine {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 1rem 0 1rem 1.1rem; min-height: 0;
+    }
+    /* Sixteen characters divide the spine's height, whatever it is: the glyph
+       shrinks before it overflows, and never grows past its set size. */
+    .p-date .spine span {
+      font-family: var(--serial); font-weight: 700;
+      font-size: clamp(0.5rem, calc((100cqh - 12rem) / 16.4), 1.1rem);
+      line-height: 1.02; color: #FFFFFF; letter-spacing: 0.02em;
+    }
+    .p-date .spine span.sep { color: #55554E; }
+    .p-date .side {
+      writing-mode: vertical-rl; text-orientation: mixed;
+      font-family: var(--serial); font-size: 0.44rem; letter-spacing: 0.24em;
+      text-transform: uppercase; color: #55554E;
+      padding: 1.1rem 0.85rem; text-align: right;
+    }
+    .p-date .band { background: #E6E1D3; padding: 0.5rem 0.8rem 0.4rem; }
+    .p-date .band svg { display: block; width: 100%; height: 2.2rem; }
+    .p-date .band .lbl {
+      font-family: var(--serial); font-size: 0.38rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #3A3A34; margin-top: 0.2rem;
+    }
+    .p-date .foot { padding: 0.8rem 1.1rem 1rem; margin-top: 0; }
+    .p-date .title {
+      font-family: var(--serial); font-weight: 700; font-size: 0.85rem;
+      letter-spacing: 0.12em; color: #E6E1D3;
+    }
+    .p-date .spec { color: #5C5C54; font-size: 0.4rem; line-height: 1.75; }
+    .p-date .status { font-size: 0.5rem; letter-spacing: 0.18em; color: #9A9A90; margin-top: 0.2rem; }
+
+    /* From three-quarters square upward the stamp lies across the top as a
+       line, sized to the width it has. */
+    @container stage (min-aspect-ratio: 3 / 4) {
+      .p-date .fig { grid-template-columns: 1fr; grid-template-rows: auto auto; align-content: center; }
+      .p-date .spine { flex-direction: row; justify-content: center; padding: 1rem 1.1rem 0.4rem; }
+      .p-date .spine span { font-size: min(2.6rem, 5.6cqw); }
+      .p-date .side { writing-mode: horizontal-tb; text-align: center; padding: 0 1.1rem 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <i id="wall" hidden></i>
+  <div class="stage">
+      <a class="poster p-date" href="https://x-amz.date">
+        <div class="fig">
+          <div class="spine" id="date-spine"></div>
+          <div class="side">x-amz-date · 16 bytes · no-store</div>
+        </div>
+        <div class="band">
+          <div id="date-code"></div>
+          <p class="lbl" id="date-lbl">code 128 · rendered at load</p>
+        </div>
+        <div class="foot">
+          <p class="title">x-amz.date</p>
+          <p class="spec">a cloudfront function returning yyyymmddThhmmssZ — the value the<br>x-amz-date header takes when you sign an aws request by hand</p>
+          <p class="status">live · continuously</p>
+        </div>
+      </a>
+  </div>
+  <a class="production" href="/">an <b>X-AMZ</b> production</a>
+
+  <script src="/js/base256.js"></script>
+  <script src="/js/sha256.js"></script>
+  <script src="/js/ornaments.js"></script>
+  <script src="/js/code128.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    // ── x-amz.date — the served value, rendered now, in the served format.
+    var now = new Date();
+    function p2(n) { return (n < 10 ? '0' : '') + n; }
+    var stamp = now.getUTCFullYear() + p2(now.getUTCMonth() + 1) + p2(now.getUTCDate()) +
+                'T' + p2(now.getUTCHours()) + p2(now.getUTCMinutes()) + p2(now.getUTCSeconds()) + 'Z';
+    var spineEl = document.getElementById('date-spine');
+    if (spineEl) {
+      Array.from(stamp).forEach(function (ch) {
+        var s = document.createElement('span');
+        s.textContent = ch;
+        if (ch === 'T' || ch === 'Z') s.className = 'sep';
+        spineEl.appendChild(s);
+      });
+    }
+    try {
+      document.getElementById('date-code').innerHTML = Code128.svg(stamp, 1.3, 44, '#141410');
+      document.getElementById('date-lbl').textContent = stamp + ' · code 128 · scan to check the clock';
+    } catch (e) { /* the band keeps its default caption */ }
+  })();
+  </script>
+</body>
+</html>

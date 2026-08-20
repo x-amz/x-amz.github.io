@@ -14,8 +14,8 @@
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="apple-touch-icon" href="/favicon.png">
   <style>
+<!--{ kit.css }-->
 <!--{ base.css }-->
-<!--{ poster styles }-->
   </style>
 </head>
 <body>
@@ -48,17 +48,7 @@
 
   </div>
 
-  <script src="/js/base256.js"></script>
-  <script src="/js/sha256.js"></script>
-  <script src="/js/ornaments.js"></script>
-  <script src="/js/code128.js"></script>
   <script src="/js/edges.js"></script>
-  <script>
-  (function () {
-    'use strict';
-
-    Edges.draw(<!--{ graph }-->);
-<!--{ poster scripts }-->  })();
-  </script>
+  <script>Edges.draw(<!--{ graph }-->);</script>
 </body>
 </html>

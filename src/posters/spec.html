@@ -1,8 +1,8 @@
-<!-- http-files.org -->
+<!-- {"title": "The .http File Format", "description": "http-files.org — a vendor-neutral specification of the .http file format, stewarded, not owned.", "ideal": [1100, 1400], "k": 22, "bleed": "#FBFAF4", "production": ["#8B8A80", "#1C1C18"]} -->
 <style>
     /* ═══ http-files.org — bond paper, centered, letter proportion ═══ */
     .p-spec {
-      --acc: #00D4FF; background: #FBFAF4; color: #1C1C18;
+      --acc: #00D4FF; color: #1C1C18;
       padding: 1.5rem 1.5rem 1.2rem; text-align: center;
     }
     .p-spec .hdr {
@@ -22,16 +22,32 @@
     .p-spec .rule { height: 1px; background: #C9C7BC; margin: 1rem 0 0.6rem; }
     .p-spec .spec { color: #6E6C62; text-transform: none; letter-spacing: 0.01em; font-size: 0.42rem; }
     .p-spec .status { color: #1C1C18; font-size: 0.46rem; margin-top: 0.4rem; letter-spacing: 0.12em; }
-    .p-spec .foot { margin-top: auto; }
+
+    /* Landscape: the memo header still runs across the top; the title stands
+       left, the specimen right, the rule and the facts along the bottom. */
+    @container stage (min-aspect-ratio: 23 / 20) {
+      .p-spec {
+        display: grid; grid-template-columns: 1fr 1.1fr;
+        grid-template-rows: auto minmax(0, 1fr) auto; column-gap: 1.5rem;
+        text-align: left; padding: 1.4rem 1.8rem 1.2rem;
+      }
+      .p-spec .hdr { grid-column: 1 / -1; grid-row: 1; }
+      .p-spec .head { grid-column: 1; grid-row: 2; align-self: center; }
+      .p-spec .title { margin-top: 0; font-size: 2rem; }
+      .p-spec .doc { grid-column: 2; grid-row: 2; align-self: center; justify-self: start; margin: 0; }
+      .p-spec .foot { grid-column: 1 / -1; grid-row: 3; }
+    }
 </style>
 
-      <a class="poster poster--sheet poster--service p-spec" href="https://http-files.org">
+      <a class="poster p-spec" href="https://http-files.org">
         <div class="hdr">
           <span>Community Memo<br>Request for Comments: none<br>Category: Informational</span>
           <span style="text-align:right">http-files.org<br>August 2026</span>
         </div>
-        <p class="title">The .http File Format</p>
-        <p class="kick">vendor-neutral · stewarded, not owned</p>
+        <div class="head">
+          <p class="title">The .http File Format</p>
+          <p class="kick">vendor-neutral · stewarded, not owned</p>
+        </div>
         <pre class="doc"><span class="c"># The .http File Format</span>
 @host = http-files.org
 GET /spec/basics/

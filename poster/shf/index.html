@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" style="--ideal-w:1800px;--ideal-h:1000px;--kw:21;--kh:21;background:#0B0A0C">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>swift-http-files — X-AMZ</title>
+  <meta name="description" content="The library under requiem and req. Six layered targets; everything is a region or a transformer, there is no engine.">
+  <link rel="canonical" href="https://x-amz.dev/poster/shf/">
+  <meta property="og:title" content="swift-http-files — X-AMZ">
+  <meta property="og:description" content="The library under requiem and req. Six layered targets; everything is a region or a transformer, there is no engine.">
+  <meta property="og:url" content="https://x-amz.dev/poster/shf/">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <style>
+
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 400 900; src: url('/fonts/BodoniModa-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Bodoni Moda'; font-style: italic; font-weight: 400 900; src: url('/fonts/BodoniModa-Italic-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; src: url('/fonts/InstrumentSerif-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('/fonts/InstrumentSerif-Italic-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 400; src: url('/fonts/JuliaMono-Regular.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 700; src: url('/fonts/JuliaMono-Bold.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400; src: url('/fonts/B612Mono-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 700; src: url('/fonts/B612Mono-Bold-latin.woff2') format('woff2'); font-display: swap; }
+
+    :root {
+      --jet: #000000;
+      --wall-hair: #1A1A1A;
+      --ivory: #E6E1D3;
+      --dim: #7E7E74;
+      --gold: #C9A227;
+      --bodoni: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+      --ivy: 'IvyPresto Headline', 'Instrument Serif', 'Bodoni 72', Didot, Georgia, serif;
+      --source: 'JuliaMono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --serial: 'B612 Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── The poster page ──
+       One poster, full screen. The poster fills the viewport up to its ideal
+       size and stops; past that its backdrop bleeds to the edges. It does not
+       know its own proportion: the same markup composes portrait, square and
+       landscape, switching layout on the stage's aspect ratio.
+
+       Scale is the root font-size, so every rem inside a poster is one unit of
+       the poster's own measure. A poster declares its design size in units,
+       --kw across and --kh down, and the unit is whichever is smaller: the
+       stage width over --kw or its height over --kh. A poster designed 22
+       units across reads the same at 353px on the wall and at 1200px full
+       screen; one that also declares a height stops growing when the room
+       runs out in that direction. --ideal-w, --ideal-h, --kw, --kh and the
+       bleed are written onto <html> by build.py from the poster's header. */
+    :root {
+      --vh: 100vh;
+      --foot: 44px;                       /* the production line below the stage */
+      --stage-w: min(100vw, var(--ideal-w));
+      --stage-h: min(calc(var(--vh) - var(--foot)), var(--ideal-h));
+      font-size: min(calc(var(--stage-w) / var(--kw)), calc(var(--stage-h) / var(--kh)));
+      color-scheme: dark;
+    }
+    @supports (height: 100dvh) { :root { --vh: 100dvh; } }
+    /* Framed on the wall (/poster/<name>/#wall): no production line, the poster
+       is the whole viewport. */
+    :root:has(#wall:target) { --foot: 0px; }
+    #wall:target ~ .production { display: none; }
+
+    body {
+      min-height: var(--vh);
+      display: grid; grid-template-rows: 1fr auto; justify-items: center; align-items: center;
+      background: transparent; color: var(--ivory);
+      font-family: var(--serial); line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    .stage {
+      width: var(--stage-w); height: var(--stage-h);
+      container-type: size; container-name: stage;
+    }
+
+    .production {
+      height: var(--foot); display: inline-flex; align-items: center; padding: 0 16px;
+      font-family: var(--serial); font-size: 10px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--production, var(--dim));
+      transition: color 0.18s ease;
+    }
+    .production b { font-weight: 700; }
+    .production:hover { color: var(--production-hover, var(--ivory)); }
+
+    /* ── The poster itself ── */
+    .poster {
+      width: 100%; height: 100%;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      color: var(--ivory);
+    }
+    /* The common skeleton: a kicker line, the figure that takes the room, and a
+       foot carrying title, spec and status. Portrait stacks them. */
+    .poster > .fig { flex: 1 1 auto; min-height: 0; min-width: 0; }
+    .poster > .foot { margin-top: auto; }
+
+    /* Past a threshold the stack splits: figure left, foot right, kicker across
+       the top. A poster opts in with .split (from three-quarters square) or
+       .split-wide (from square — for figures that need the width), and may set
+       --cols and --gap. */
+    @container stage (min-aspect-ratio: 3 / 4) {
+      .poster.split {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .poster.split-wide {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split-wide > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split-wide > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split-wide > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+
+    /* The spec block. Real facts, typeset per-poster. Never the billing-block
+       squeeze: no scaleX, no forced nowrap, no single shared micro-caps strip. */
+    .spec {
+      font-family: var(--serial); font-size: 0.44rem;
+      letter-spacing: 0.06em; line-height: 1.85; text-transform: uppercase;
+      color: var(--dim);
+    }
+    .status {
+      font-family: var(--serial); font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ivory);
+    }
+    /* ═══ swift-http-files — the layered library, supporting the client ═══ */
+    .p-shf { --acc: #C49A2C; padding: 1.1rem 1.2rem; --cols: minmax(0, min(21rem, 45%)) 1fr; --gap: 1.6rem; }
+    .p-shf .kick {
+      font-family: var(--serial); font-size: 0.42rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #6E6A72;
+    }
+    .p-shf .fig { display: flex; flex-direction: column; justify-content: center; gap: 0.16rem; margin-top: 0.6rem; }
+    .p-shf .tier {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.5rem;
+      border-left: 2px solid #2A2530; padding: 0.15rem 0 0.15rem 0.55rem;
+    }
+    .p-shf .tier .n {
+      font-family: var(--source); font-size: 0.72rem; color: #E6E1D3; letter-spacing: 0.01em;
+    }
+    .p-shf .tier .d {
+      font-family: var(--serial); font-size: 0.36rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #6E6A72; white-space: nowrap;
+    }
+    .p-shf .tier.dep { border-left-color: #C49A2C; }
+    .p-shf .tier.dep .n { color: #C49A2C; }
+    .p-shf .tier.dep .d { color: #8A7350; }
+    .p-shf .cli {
+      margin-top: 0.5rem; border-top: 1px solid #2A2530; padding-top: 0.4rem;
+      font-family: var(--source); font-size: 0.46rem; color: #9A93A2; line-height: 1.7;
+    }
+    .p-shf .cli b { color: #E6E1D3; font-weight: 400; }
+    .p-shf .foot { padding-top: 0.8rem; }
+    .p-shf .title {
+      font-family: var(--source); font-size: 1.5rem; color: #E6E1D3; letter-spacing: -0.01em;
+    }
+    .p-shf .spec { color: #6E6A72; }
+    .p-shf .status { color: #C49A2C; font-size: 0.5rem; margin-top: 0.3rem; }
+
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .p-shf .fig { margin-top: 0; }
+      .p-shf .foot { padding-top: 0; }
+    }
+  </style>
+</head>
+<body>
+  <i id="wall" hidden></i>
+  <div class="stage">
+      <div data-unreleased="repository still private" class="poster poster--unreleased split-wide p-shf" aria-label="swift-http-files — release in preparation">
+        <p class="kick">the library under requiem and req</p>
+        <div class="fig">
+          <div class="tier"><span class="n">HttpDisplayUI</span><span class="d">the only target touching uikit</span></div>
+          <div class="tier"><span class="n">HttpDisplay</span><span class="d">highlighting · formatting</span></div>
+          <div class="tier dep"><span class="n">HttpAws</span><span class="d">sigv4, carried alone → swift-sigv4</span></div>
+          <div class="tier"><span class="n">HttpFiles</span><span class="d">semantics · urlrequest · execution</span></div>
+          <div class="tier dep"><span class="n">ContentFormats</span><span class="d">formats · values → Base256</span></div>
+          <div class="tier"><span class="n">HttpSyntax</span><span class="d">tokenizer · no dependencies</span></div>
+          <p class="cli"><b>req</b> list · tokens · resolve · run · compare</p>
+        </div>
+        <div class="foot">
+          <p class="title">swift-http-files</p>
+          <p class="spec">six libraries, layered — a target links only what it needs<br>everything is a region or a transformer; there is no engine<br>position is the contract: a signer placed after resolve sees the resolved request<br>the result document is the file — valid .http at every step<br>req is one of http.vet's seven graded lanes, from source, no special standing</p>
+          <p class="status">release in preparation</p>
+        </div>
+      </div>
+  </div>
+  <a class="production" href="/">an <b>X-AMZ</b> production</a>
+
+  <script src="/js/base256.js"></script>
+  <script src="/js/sha256.js"></script>
+  <script src="/js/ornaments.js"></script>
+  <script src="/js/code128.js"></script>
+  <script>
+  (function () {
+    'use strict';
+  })();
+  </script>
+</body>
+</html>

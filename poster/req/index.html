@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" style="--ideal-w:1000px;--ideal-h:1500px;--kw:16.6;--kh:24;background:#0D1117">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>req.to — X-AMZ</title>
+  <meta name="description" content="Universal links for .http requests. The request travels in the fragment and never reaches the server.">
+  <link rel="canonical" href="https://x-amz.dev/poster/req/">
+  <meta property="og:title" content="req.to — X-AMZ">
+  <meta property="og:description" content="Universal links for .http requests. The request travels in the fragment and never reaches the server.">
+  <meta property="og:url" content="https://x-amz.dev/poster/req/">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <style>
+
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 400 900; src: url('/fonts/BodoniModa-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Bodoni Moda'; font-style: italic; font-weight: 400 900; src: url('/fonts/BodoniModa-Italic-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; src: url('/fonts/InstrumentSerif-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('/fonts/InstrumentSerif-Italic-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 400; src: url('/fonts/JuliaMono-Regular.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 700; src: url('/fonts/JuliaMono-Bold.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400; src: url('/fonts/B612Mono-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 700; src: url('/fonts/B612Mono-Bold-latin.woff2') format('woff2'); font-display: swap; }
+
+    :root {
+      --jet: #000000;
+      --wall-hair: #1A1A1A;
+      --ivory: #E6E1D3;
+      --dim: #7E7E74;
+      --gold: #C9A227;
+      --bodoni: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+      --ivy: 'IvyPresto Headline', 'Instrument Serif', 'Bodoni 72', Didot, Georgia, serif;
+      --source: 'JuliaMono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --serial: 'B612 Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── The poster page ──
+       One poster, full screen. The poster fills the viewport up to its ideal
+       size and stops; past that its backdrop bleeds to the edges. It does not
+       know its own proportion: the same markup composes portrait, square and
+       landscape, switching layout on the stage's aspect ratio.
+
+       Scale is the root font-size, so every rem inside a poster is one unit of
+       the poster's own measure. A poster declares its design size in units,
+       --kw across and --kh down, and the unit is whichever is smaller: the
+       stage width over --kw or its height over --kh. A poster designed 22
+       units across reads the same at 353px on the wall and at 1200px full
+       screen; one that also declares a height stops growing when the room
+       runs out in that direction. --ideal-w, --ideal-h, --kw, --kh and the
+       bleed are written onto <html> by build.py from the poster's header. */
+    :root {
+      --vh: 100vh;
+      --foot: 44px;                       /* the production line below the stage */
+      --stage-w: min(100vw, var(--ideal-w));
+      --stage-h: min(calc(var(--vh) - var(--foot)), var(--ideal-h));
+      font-size: min(calc(var(--stage-w) / var(--kw)), calc(var(--stage-h) / var(--kh)));
+      color-scheme: dark;
+    }
+    @supports (height: 100dvh) { :root { --vh: 100dvh; } }
+    /* Framed on the wall (/poster/<name>/#wall): no production line, the poster
+       is the whole viewport. */
+    :root:has(#wall:target) { --foot: 0px; }
+    #wall:target ~ .production { display: none; }
+
+    body {
+      min-height: var(--vh);
+      display: grid; grid-template-rows: 1fr auto; justify-items: center; align-items: center;
+      background: transparent; color: var(--ivory);
+      font-family: var(--serial); line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    .stage {
+      width: var(--stage-w); height: var(--stage-h);
+      container-type: size; container-name: stage;
+    }
+
+    .production {
+      height: var(--foot); display: inline-flex; align-items: center; padding: 0 16px;
+      font-family: var(--serial); font-size: 10px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--production, var(--dim));
+      transition: color 0.18s ease;
+    }
+    .production b { font-weight: 700; }
+    .production:hover { color: var(--production-hover, var(--ivory)); }
+
+    /* ── The poster itself ── */
+    .poster {
+      width: 100%; height: 100%;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      color: var(--ivory);
+    }
+    /* The common skeleton: a kicker line, the figure that takes the room, and a
+       foot carrying title, spec and status. Portrait stacks them. */
+    .poster > .fig { flex: 1 1 auto; min-height: 0; min-width: 0; }
+    .poster > .foot { margin-top: auto; }
+
+    /* Past a threshold the stack splits: figure left, foot right, kicker across
+       the top. A poster opts in with .split (from three-quarters square) or
+       .split-wide (from square — for figures that need the width), and may set
+       --cols and --gap. */
+    @container stage (min-aspect-ratio: 3 / 4) {
+      .poster.split {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .poster.split-wide {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split-wide > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split-wide > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split-wide > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+
+    /* The spec block. Real facts, typeset per-poster. Never the billing-block
+       squeeze: no scaleX, no forced nowrap, no single shared micro-caps strip. */
+    .spec {
+      font-family: var(--serial); font-size: 0.44rem;
+      letter-spacing: 0.06em; line-height: 1.85; text-transform: uppercase;
+      color: var(--dim);
+    }
+    .status {
+      font-family: var(--serial); font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ivory);
+    }
+    /* ═══ req.to — the punched tape ═══ */
+    .p-req { --acc: #58A6FF; padding: 1rem 0.9rem; text-align: center; }
+    .p-req .kick {
+      font-family: var(--serial); font-size: 0.42rem; letter-spacing: 0.24em;
+      text-transform: uppercase; color: #484F58;
+    }
+    .p-req .fig { margin: 0.7rem 0; display: grid; grid-template-rows: minmax(0, 1fr); place-items: center; overflow: hidden; }
+    .p-req .fig svg { height: 100%; width: auto; max-width: 100%; }
+    .p-req .rd {
+      font-family: var(--source); font-size: 0.42rem; line-height: 1.75;
+      color: #8B949E; text-align: left; display: inline-block; white-space: pre;
+    }
+    .p-req .rd .e { color: #58A6FF; }
+    .p-req .title {
+      font-family: var(--ivy); font-size: 1.75rem; color: #E6EDF3; line-height: 1; margin-top: 0.5rem;
+    }
+    .p-req .spec { color: #484F58; font-size: 0.4rem; line-height: 1.75; }
+    .p-req .status { color: #8B949E; font-size: 0.5rem; letter-spacing: 0.18em; margin-top: 0.25rem; }
+
+    @container stage (min-aspect-ratio: 23 / 20) {
+      .p-req { text-align: left; padding: 1.1rem 1.4rem; }
+      .p-req .fig { margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <i id="wall" hidden></i>
+  <div class="stage">
+      <a class="poster split p-req" href="https://req.to">
+        <p class="kick">universal link · the request travels in the fragment</p>
+        <div class="fig" id="req-tape" aria-label="8-level punched tape of the encoded request"></div>
+        <div class="foot">
+          <pre class="rd"><span class="e">req.to/#UE9TVCBodHRw…</span>
+POST https://httpbin.org/post
+content-type: application/json</pre>
+          <p class="title">req.to</p>
+          <p class="spec">http text split on blank lines, each section base64url, joined with "."<br>the fragment is never sent to the server — rfc 3986 §3.5<br>no account, no shortener table, nothing stored<br>universal links into requiem today · the req cli's home when it ships</p>
+          <p class="status">live · static · no server state</p>
+        </div>
+      </a>
+  </div>
+  <a class="production" href="/">an <b>X-AMZ</b> production</a>
+
+  <script src="/js/base256.js"></script>
+  <script src="/js/sha256.js"></script>
+  <script src="/js/ornaments.js"></script>
+  <script src="/js/code128.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    // ── req.to — punched tape of the real base64url payload.
+    var PAYLOAD = 'UE9TVCBodHRwczovL2h0dHBiaW4ub3JnL3Bvc3Q';
+    var tapeEl = document.getElementById('req-tape');
+    if (tapeEl) {
+      var bytes = [];
+      for (var t = 0; t < PAYLOAD.length; t++) bytes.push(PAYLOAD.charCodeAt(t));
+      tapeEl.innerHTML = Ornaments.tapeSVG(bytes.slice(0, 22), {
+        cell: 13, ink: '#58A6FF', dim: 'rgba(88,166,255,0.22)'
+      });
+      // The tape is drawn as a strip; stand it on end by transposing the
+      // viewBox, so the element itself is upright and sizes like any image.
+      var svg = tapeEl.querySelector('svg');
+      if (svg) {
+        var vb = svg.getAttribute('viewBox').split(/\s+/).map(Number), w = vb[2], h = vb[3];
+        var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('transform', 'rotate(90) translate(0 ' + (-h) + ')');
+        while (svg.firstChild) g.appendChild(svg.firstChild);
+        svg.appendChild(g);
+        svg.setAttribute('viewBox', '0 0 ' + h + ' ' + w);
+        svg.removeAttribute('width'); svg.removeAttribute('height');
+      }
+    }
+  })();
+  </script>
+</body>
+</html>

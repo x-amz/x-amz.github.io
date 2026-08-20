@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" style="--ideal-w:1200px;--ideal-h:1700px;--kw:22;--kh:22;background:#10151A">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>http.vet — X-AMZ</title>
+  <meta name="description" content="Cross-client conformance for .http files. Seven lanes, 83 probes each, every cell recomputed from the wire bytes its own report carries.">
+  <link rel="canonical" href="https://x-amz.dev/poster/vet/">
+  <meta property="og:title" content="http.vet — X-AMZ">
+  <meta property="og:description" content="Cross-client conformance for .http files. Seven lanes, 83 probes each, every cell recomputed from the wire bytes its own report carries.">
+  <meta property="og:url" content="https://x-amz.dev/poster/vet/">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <style>
+
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 400 900; src: url('/fonts/BodoniModa-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Bodoni Moda'; font-style: italic; font-weight: 400 900; src: url('/fonts/BodoniModa-Italic-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; src: url('/fonts/InstrumentSerif-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('/fonts/InstrumentSerif-Italic-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 400; src: url('/fonts/JuliaMono-Regular.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 700; src: url('/fonts/JuliaMono-Bold.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400; src: url('/fonts/B612Mono-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 700; src: url('/fonts/B612Mono-Bold-latin.woff2') format('woff2'); font-display: swap; }
+
+    :root {
+      --jet: #000000;
+      --wall-hair: #1A1A1A;
+      --ivory: #E6E1D3;
+      --dim: #7E7E74;
+      --gold: #C9A227;
+      --bodoni: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+      --ivy: 'IvyPresto Headline', 'Instrument Serif', 'Bodoni 72', Didot, Georgia, serif;
+      --source: 'JuliaMono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --serial: 'B612 Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── The poster page ──
+       One poster, full screen. The poster fills the viewport up to its ideal
+       size and stops; past that its backdrop bleeds to the edges. It does not
+       know its own proportion: the same markup composes portrait, square and
+       landscape, switching layout on the stage's aspect ratio.
+
+       Scale is the root font-size, so every rem inside a poster is one unit of
+       the poster's own measure. A poster declares its design size in units,
+       --kw across and --kh down, and the unit is whichever is smaller: the
+       stage width over --kw or its height over --kh. A poster designed 22
+       units across reads the same at 353px on the wall and at 1200px full
+       screen; one that also declares a height stops growing when the room
+       runs out in that direction. --ideal-w, --ideal-h, --kw, --kh and the
+       bleed are written onto <html> by build.py from the poster's header. */
+    :root {
+      --vh: 100vh;
+      --foot: 44px;                       /* the production line below the stage */
+      --stage-w: min(100vw, var(--ideal-w));
+      --stage-h: min(calc(var(--vh) - var(--foot)), var(--ideal-h));
+      font-size: min(calc(var(--stage-w) / var(--kw)), calc(var(--stage-h) / var(--kh)));
+      color-scheme: dark;
+    }
+    @supports (height: 100dvh) { :root { --vh: 100dvh; } }
+    /* Framed on the wall (/poster/<name>/#wall): no production line, the poster
+       is the whole viewport. */
+    :root:has(#wall:target) { --foot: 0px; }
+    #wall:target ~ .production { display: none; }
+
+    body {
+      min-height: var(--vh);
+      display: grid; grid-template-rows: 1fr auto; justify-items: center; align-items: center;
+      background: transparent; color: var(--ivory);
+      font-family: var(--serial); line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    .stage {
+      width: var(--stage-w); height: var(--stage-h);
+      container-type: size; container-name: stage;
+    }
+
+    .production {
+      height: var(--foot); display: inline-flex; align-items: center; padding: 0 16px;
+      font-family: var(--serial); font-size: 10px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--production, var(--dim));
+      transition: color 0.18s ease;
+    }
+    .production b { font-weight: 700; }
+    .production:hover { color: var(--production-hover, var(--ivory)); }
+
+    /* ── The poster itself ── */
+    .poster {
+      width: 100%; height: 100%;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      color: var(--ivory);
+    }
+    /* The common skeleton: a kicker line, the figure that takes the room, and a
+       foot carrying title, spec and status. Portrait stacks them. */
+    .poster > .fig { flex: 1 1 auto; min-height: 0; min-width: 0; }
+    .poster > .foot { margin-top: auto; }
+
+    /* Past a threshold the stack splits: figure left, foot right, kicker across
+       the top. A poster opts in with .split (from three-quarters square) or
+       .split-wide (from square — for figures that need the width), and may set
+       --cols and --gap. */
+    @container stage (min-aspect-ratio: 3 / 4) {
+      .poster.split {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .poster.split-wide {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split-wide > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split-wide > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split-wide > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+
+    /* The spec block. Real facts, typeset per-poster. Never the billing-block
+       squeeze: no scaleX, no forced nowrap, no single shared micro-caps strip. */
+    .spec {
+      font-family: var(--serial); font-size: 0.44rem;
+      letter-spacing: 0.06em; line-height: 1.85; text-transform: uppercase;
+      color: var(--dim);
+    }
+    .status {
+      font-family: var(--serial); font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ivory);
+    }
+    /* ═══ http.vet — the conformance field ═══ */
+    .p-vet { --acc: #46C28E; padding: 1.05rem 0.95rem; }
+    .p-vet .kick {
+      font-family: var(--serial); font-size: 0.44rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: #7D8B98;
+    }
+    .p-vet .fig { margin-top: 0.75rem; display: flex; flex-direction: column; }
+    .p-vet .lanes {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.2rem;
+      flex: 1 1 auto; min-height: 0;
+    }
+    /* 67 ticks per lane divide the lane's height, whatever it is — one tick per
+       graded probe, so the column length is the corpus, not a rounded bar. */
+    .p-vet .lane { display: flex; flex-direction: column; gap: 1px; min-height: 0; }
+    .p-vet .lane i { display: block; flex: 1 1 0; min-height: 0; }
+    .p-vet .ok   { background: #46C28E; }
+    .p-vet .warn { background: #E3A63B; }
+    .p-vet .bad  { background: #E5534B; }
+    .p-vet .obs  { background: #242D36; }
+    .p-vet .names {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.2rem; margin-top: 0.4rem;
+    }
+    .p-vet .names span {
+      font-family: var(--source); font-size: 0.36rem; color: #7D8B98;
+      writing-mode: vertical-rl; text-orientation: mixed; height: 3.1rem; letter-spacing: 0.04em;
+    }
+    .p-vet .fracs { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.2rem; margin-top: 0.25rem; }
+    .p-vet .fracs span { font-family: var(--source); font-size: 0.4rem; color: #D6DEE6; text-align: center; }
+    .p-vet .foot { padding-top: 0.8rem; }
+    .p-vet .title {
+      font-family: var(--bodoni); font-weight: 600; font-size: 2.1rem;
+      color: #D6DEE6; line-height: 1;
+    }
+    .p-vet .spec { color: #4B5763; }
+    .p-vet .status { color: #46C28E; font-size: 0.5rem; margin-top: 0.3rem; }
+
+    @container stage (min-aspect-ratio: 23 / 20) {
+      .p-vet { padding: 1.1rem 1.4rem; --cols: 1fr 1.1fr; }
+      .p-vet .fig { margin-top: 0.5rem; }
+      .p-vet .foot { padding-top: 0; }
+    }
+  </style>
+</head>
+<body>
+  <i id="wall" hidden></i>
+  <div class="stage">
+      <a class="poster split p-vet" href="https://http.vet">
+        <p class="kick">cross-client conformance · 2026-draft.1</p>
+        <div class="fig">
+          <div class="lanes" id="vet-lanes" aria-label="Seven client lanes, 67 graded probes each"></div>
+          <div class="names">
+            <span>ijhttp</span><span>httpyac</span><span>kulala</span><span>resterm</span><span>dotnet-httpie</span><span>httprunner</span><span>req</span>
+          </div>
+          <div class="fracs">
+            <span>44</span><span>46</span><span>45</span><span>42</span><span>39</span><span>48</span><span>46</span>
+          </div>
+        </div>
+        <div class="foot">
+          <p class="title">http.vet</p>
+          <p class="spec">83 probes per lane · supported · quirked · observed · not conforming<br>the figure is supported; ticks below it are the rest of the 83<br>each cell recomputed from the wire bytes its own report carries<br>req is the steward's own lane, graded with no special standing<br>kit httpvet 0.2.0 · spec 2bd5523 · corpus 0ec7f5e2 · run 2026-08-16 · cc0</p>
+          <p class="status">live · open for intake</p>
+        </div>
+      </a>
+  </div>
+  <a class="production" href="/">an <b>X-AMZ</b> production</a>
+
+  <script src="/js/base256.js"></script>
+  <script src="/js/sha256.js"></script>
+  <script src="/js/ornaments.js"></script>
+  <script src="/js/code128.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    // ── http.vet — 67 graded ticks per lane, from the published fractions.
+    // One tick per probe. Counts are read straight off the published reports in
+    // http.vet/reports/2026-draft.1 — [supported, quirked, observed, not-conforming],
+    // each row summing to the corpus's 83 probes. Nothing is scaled or rounded.
+    var LANES = [
+      [44, 11, 12, 16],  // ijhttp        2026.1
+      [46,  8, 11, 18],  // httpyac       6.16.7
+      [45,  8, 16, 14],  // kulala        0.14.2
+      [42, 10, 12, 19],  // resterm       0.51.3
+      [39,  9, 16, 19],  // dotnet-httpie 0.17.0
+      [48,  8, 14, 13],  // httprunner    1.1.54
+      [46, 10, 16, 11]   // req           0.1.0
+    ];
+    var CLS = ['ok', 'warn', 'obs', 'bad'];
+    var lanesEl = document.getElementById('vet-lanes');
+    if (lanesEl) {
+      LANES.forEach(function (counts) {
+        var lane = document.createElement('div');
+        lane.className = 'lane';
+        counts.forEach(function (n, band) {
+          for (var i = 0; i < n; i++) {
+            var tick = document.createElement('i');
+            tick.className = CLS[band];
+            lane.appendChild(tick);
+          }
+        });
+        lanesEl.appendChild(lane);
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

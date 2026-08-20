@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" style="--ideal-w:1000px;--ideal-h:1500px;--kw:16.6;--kh:24;background:#0D1117">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>hmac.sh — X-AMZ</title>
+  <meta name="description" content="Every slash in the path is one HMAC-SHA256 round. The recipe that reproduces the digests is printed on the poster.">
+  <link rel="canonical" href="https://x-amz.dev/poster/hmac/">
+  <meta property="og:title" content="hmac.sh — X-AMZ">
+  <meta property="og:description" content="Every slash in the path is one HMAC-SHA256 round. The recipe that reproduces the digests is printed on the poster.">
+  <meta property="og:url" content="https://x-amz.dev/poster/hmac/">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <style>
+
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 400 900; src: url('/fonts/BodoniModa-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Bodoni Moda'; font-style: italic; font-weight: 400 900; src: url('/fonts/BodoniModa-Italic-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; src: url('/fonts/InstrumentSerif-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('/fonts/InstrumentSerif-Italic-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 400; src: url('/fonts/JuliaMono-Regular.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 700; src: url('/fonts/JuliaMono-Bold.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400; src: url('/fonts/B612Mono-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 700; src: url('/fonts/B612Mono-Bold-latin.woff2') format('woff2'); font-display: swap; }
+
+    :root {
+      --jet: #000000;
+      --wall-hair: #1A1A1A;
+      --ivory: #E6E1D3;
+      --dim: #7E7E74;
+      --gold: #C9A227;
+      --bodoni: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+      --ivy: 'IvyPresto Headline', 'Instrument Serif', 'Bodoni 72', Didot, Georgia, serif;
+      --source: 'JuliaMono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --serial: 'B612 Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── The poster page ──
+       One poster, full screen. The poster fills the viewport up to its ideal
+       size and stops; past that its backdrop bleeds to the edges. It does not
+       know its own proportion: the same markup composes portrait, square and
+       landscape, switching layout on the stage's aspect ratio.
+
+       Scale is the root font-size, so every rem inside a poster is one unit of
+       the poster's own measure. A poster declares its design size in units,
+       --kw across and --kh down, and the unit is whichever is smaller: the
+       stage width over --kw or its height over --kh. A poster designed 22
+       units across reads the same at 353px on the wall and at 1200px full
+       screen; one that also declares a height stops growing when the room
+       runs out in that direction. --ideal-w, --ideal-h, --kw, --kh and the
+       bleed are written onto <html> by build.py from the poster's header. */
+    :root {
+      --vh: 100vh;
+      --foot: 44px;                       /* the production line below the stage */
+      --stage-w: min(100vw, var(--ideal-w));
+      --stage-h: min(calc(var(--vh) - var(--foot)), var(--ideal-h));
+      font-size: min(calc(var(--stage-w) / var(--kw)), calc(var(--stage-h) / var(--kh)));
+      color-scheme: dark;
+    }
+    @supports (height: 100dvh) { :root { --vh: 100dvh; } }
+    /* Framed on the wall (/poster/<name>/#wall): no production line, the poster
+       is the whole viewport. */
+    :root:has(#wall:target) { --foot: 0px; }
+    #wall:target ~ .production { display: none; }
+
+    body {
+      min-height: var(--vh);
+      display: grid; grid-template-rows: 1fr auto; justify-items: center; align-items: center;
+      background: transparent; color: var(--ivory);
+      font-family: var(--serial); line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    .stage {
+      width: var(--stage-w); height: var(--stage-h);
+      container-type: size; container-name: stage;
+    }
+
+    .production {
+      height: var(--foot); display: inline-flex; align-items: center; padding: 0 16px;
+      font-family: var(--serial); font-size: 10px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--production, var(--dim));
+      transition: color 0.18s ease;
+    }
+    .production b { font-weight: 700; }
+    .production:hover { color: var(--production-hover, var(--ivory)); }
+
+    /* ── The poster itself ── */
+    .poster {
+      width: 100%; height: 100%;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      color: var(--ivory);
+    }
+    /* The common skeleton: a kicker line, the figure that takes the room, and a
+       foot carrying title, spec and status. Portrait stacks them. */
+    .poster > .fig { flex: 1 1 auto; min-height: 0; min-width: 0; }
+    .poster > .foot { margin-top: auto; }
+
+    /* Past a threshold the stack splits: figure left, foot right, kicker across
+       the top. A poster opts in with .split (from three-quarters square) or
+       .split-wide (from square — for figures that need the width), and may set
+       --cols and --gap. */
+    @container stage (min-aspect-ratio: 3 / 4) {
+      .poster.split {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .poster.split-wide {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split-wide > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split-wide > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split-wide > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+
+    /* The spec block. Real facts, typeset per-poster. Never the billing-block
+       squeeze: no scaleX, no forced nowrap, no single shared micro-caps strip. */
+    .spec {
+      font-family: var(--serial); font-size: 0.44rem;
+      letter-spacing: 0.06em; line-height: 1.85; text-transform: uppercase;
+      color: var(--dim);
+    }
+    .status {
+      font-family: var(--serial); font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ivory);
+    }
+    /* ═══ hmac.sh — the fold ═══ */
+    .p-hmac { --acc: #58A6FF; padding: 1rem 0.9rem; --cols: 1.7fr 1fr; }
+    .p-hmac .kick {
+      font-family: var(--source); font-size: 0.42rem; letter-spacing: 0.04em; color: #7D8590;
+    }
+    /* The solidus: every "/" in the path is one HMAC round, so the poster is the
+       slash. Four strokes fall on a diagonal and fuse into one mark at distance. */
+    .p-hmac .fig { margin-top: 0.5rem; display: flex; flex-direction: column; justify-content: center; container-type: inline-size; }
+    .p-hmac .step { display: grid; grid-template-columns: 2rem 1fr; align-items: center; gap: 0.3rem; }
+    .p-hmac .step + .step { margin-top: -0.15rem; }
+    .p-hmac .step .sol {
+      font-family: var(--bodoni); font-weight: 500; font-size: 3.6rem;
+      line-height: 0.86; color: #1F6FEB; text-align: center;
+    }
+    .p-hmac .step .seg {
+      font-family: var(--source); font-size: 0.52rem; color: #58A6FF;
+      letter-spacing: 0.04em; display: block;
+    }
+    /* 43 base64url characters on one line, whatever width the stair has. */
+    .p-hmac .step .dg {
+      font-family: var(--source); font-size: clamp(0.26rem, calc((100cqi - 4rem) / 25.8), 0.4rem); color: #8B949E;
+      word-break: break-all; display: block; line-height: 1.45;
+    }
+    .p-hmac .s1 { margin-left: 0; }
+    .p-hmac .s2 { margin-left: 0.6rem; }
+    .p-hmac .s3 { margin-left: 1.2rem; }
+    .p-hmac .s4 { margin-left: 1.8rem; }
+    .p-hmac .s4 .sol { color: #E6EDF3; }
+    .p-hmac .s4 .dg { color: #E6EDF3; }
+    .p-hmac .recipe {
+      font-family: var(--source); font-size: 0.32rem; line-height: 1.7;
+      color: #6E7681; white-space: pre-wrap; word-break: break-all; margin-bottom: 0.8rem;
+    }
+    .p-hmac .recipe b { color: #8B949E; font-weight: 400; }
+    .p-hmac .title {
+      font-family: var(--source); font-size: 1.3rem; color: #E6EDF3; letter-spacing: 0.02em;
+    }
+    .p-hmac .spec { color: #484F58; text-transform: none; letter-spacing: 0.02em; font-size: 0.4rem; line-height: 1.75; }
+    .p-hmac .status { color: #58A6FF; font-size: 0.5rem; letter-spacing: 0.18em; margin-top: 0.25rem; }
+
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .p-hmac { padding: 1.1rem 1.4rem; }
+      .p-hmac .fig { margin-top: 0; }
+      .p-hmac .step .sol { font-size: 4.4rem; }
+      .p-hmac .step { grid-template-columns: 2.6rem 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <i id="wall" hidden></i>
+  <div class="stage">
+      <a class="poster split-wide p-hmac" href="https://hmac.sh">
+        <p class="kick">hmac.sh/eC1hbXo/prod/data/hmac</p>
+        <div class="fig">
+          <div class="step s1">
+            <span class="sol">/</span>
+            <span><span class="seg">eC1hbXo</span><span class="dg">key ← base64url · 782d616d7a · "x-amz" · 5 B</span></span>
+          </div>
+          <div class="step s2">
+            <span class="sol">/</span>
+            <span><span class="seg">prod</span><span class="dg">Hr0zaEY84FmNOR8y0AQon-R2JyHG32v-NyCXwFI3P70</span></span>
+          </div>
+          <div class="step s3">
+            <span class="sol">/</span>
+            <span><span class="seg">data</span><span class="dg">6nNiv_5Gd2GXfN4vgQV0AoUmLpliOGGuuf4_vgevjgk</span></span>
+          </div>
+          <div class="step s4">
+            <span class="sol">/</span>
+            <span><span class="seg">hmac → 303 location</span><span class="dg">Lkm2jwu--qxw3F3hUpvsdKxfJFOzrHix-dhkqMuIcPo</span></span>
+          </div>
+        </div>
+        <div class="foot">
+          <pre class="recipe"><b>$</b> K=$(printf x-amz | xxd -p -c256)
+<b>$</b> for D in prod data hmac; do K=$(printf %s "$D" \
+    | openssl dgst -sha256 -mac HMAC -macopt hexkey:$K \
+    -binary | xxd -p -c256); done
+<b>$</b> printf %s "$K" | xxd -r -p | base64 | tr '+/' '-_' | tr -d '='</pre>
+          <p class="title">hmac.sh</p>
+          <p class="spec">every slash is one hmac-sha256 round — the digest keys the next<br>the redirect target is itself a valid key: /Lkm2jwu…/x-amz.dev → /jbi9t5al…<br>key ≤ 128 bytes decoded · segment ≤ 128 chars · cache-control no-store<br>observed 2026-08-18 · x-cache: FunctionGeneratedResponse from cloudfront</p>
+          <p class="status">live · at the cloudfront edge</p>
+        </div>
+      </a>
+  </div>
+  <a class="production" href="/">an <b>X-AMZ</b> production</a>
+
+  <script src="/js/base256.js"></script>
+  <script src="/js/sha256.js"></script>
+  <script src="/js/ornaments.js"></script>
+  <script src="/js/code128.js"></script>
+  <script>
+  (function () {
+    'use strict';
+  })();
+  </script>
+</body>
+</html>

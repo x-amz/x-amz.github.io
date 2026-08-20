@@ -1,14 +1,15 @@
-<!-- http.vet -->
+<!-- {"title": "http.vet", "description": "Cross-client conformance for .http files. Seven lanes, 83 probes each, every cell recomputed from the wire bytes its own report carries.", "ideal": [1200, 1700], "k": 22, "bleed": "#10151A"} -->
 <style>
     /* ═══ http.vet — the conformance field ═══ */
-    .p-vet { --acc: #46C28E; background: #10151A; padding: 1.05rem 0.95rem; }
+    .p-vet { --acc: #46C28E; padding: 1.05rem 0.95rem; }
     .p-vet .kick {
       font-family: var(--serial); font-size: 0.44rem; letter-spacing: 0.22em;
       text-transform: uppercase; color: #7D8B98;
     }
+    .p-vet .fig { margin-top: 0.75rem; display: flex; flex-direction: column; }
     .p-vet .lanes {
       display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.2rem;
-      margin-top: 0.75rem; flex: 1; min-height: 0;
+      flex: 1 1 auto; min-height: 0;
     }
     /* 67 ticks per lane divide the lane's height, whatever it is — one tick per
        graded probe, so the column length is the corpus, not a rounded bar. */
@@ -27,23 +28,31 @@
     }
     .p-vet .fracs { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.2rem; margin-top: 0.25rem; }
     .p-vet .fracs span { font-family: var(--source); font-size: 0.4rem; color: #D6DEE6; text-align: center; }
-    .p-vet .foot { margin-top: auto; }
+    .p-vet .foot { padding-top: 0.8rem; }
     .p-vet .title {
       font-family: var(--bodoni); font-weight: 600; font-size: 2.1rem;
       color: #D6DEE6; line-height: 1;
     }
     .p-vet .spec { color: #4B5763; }
     .p-vet .status { color: #46C28E; font-size: 0.5rem; margin-top: 0.3rem; }
+
+    @container stage (min-aspect-ratio: 23 / 20) {
+      .p-vet { padding: 1.1rem 1.4rem; --cols: 1fr 1.1fr; }
+      .p-vet .fig { margin-top: 0.5rem; }
+      .p-vet .foot { padding-top: 0; }
+    }
 </style>
 
-      <a class="poster poster--service p-vet" href="https://http.vet">
+      <a class="poster split p-vet" href="https://http.vet">
         <p class="kick">cross-client conformance · 2026-draft.1</p>
-        <div class="lanes" id="vet-lanes" aria-label="Seven client lanes, 67 graded probes each"></div>
-        <div class="names">
-          <span>ijhttp</span><span>httpyac</span><span>kulala</span><span>resterm</span><span>dotnet-httpie</span><span>httprunner</span><span>req</span>
-        </div>
-        <div class="fracs">
-          <span>44</span><span>46</span><span>45</span><span>42</span><span>39</span><span>48</span><span>46</span>
+        <div class="fig">
+          <div class="lanes" id="vet-lanes" aria-label="Seven client lanes, 67 graded probes each"></div>
+          <div class="names">
+            <span>ijhttp</span><span>httpyac</span><span>kulala</span><span>resterm</span><span>dotnet-httpie</span><span>httprunner</span><span>req</span>
+          </div>
+          <div class="fracs">
+            <span>44</span><span>46</span><span>45</span><span>42</span><span>39</span><span>48</span><span>46</span>
+          </div>
         </div>
         <div class="foot">
           <p class="title">http.vet</p>

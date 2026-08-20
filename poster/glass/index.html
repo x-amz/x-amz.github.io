@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" style="--ideal-w:1200px;--ideal-h:1700px;--kw:22;--kh:22;background:#050A07">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Byte Glass — X-AMZ</title>
+  <meta name="description" content="A pane you see bytes through. ARNs, UUIDs, URLs and timestamps become shapes, not characters.">
+  <link rel="canonical" href="https://x-amz.dev/poster/glass/">
+  <meta property="og:title" content="Byte Glass — X-AMZ">
+  <meta property="og:description" content="A pane you see bytes through. ARNs, UUIDs, URLs and timestamps become shapes, not characters.">
+  <meta property="og:url" content="https://x-amz.dev/poster/glass/">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <style>
+
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 400 900; src: url('/fonts/BodoniModa-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Bodoni Moda'; font-style: italic; font-weight: 400 900; src: url('/fonts/BodoniModa-Italic-var-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; src: url('/fonts/InstrumentSerif-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('/fonts/InstrumentSerif-Italic-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 400; src: url('/fonts/JuliaMono-Regular.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 700; src: url('/fonts/JuliaMono-Bold.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400; src: url('/fonts/B612Mono-Regular-latin.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 700; src: url('/fonts/B612Mono-Bold-latin.woff2') format('woff2'); font-display: swap; }
+
+    :root {
+      --jet: #000000;
+      --wall-hair: #1A1A1A;
+      --ivory: #E6E1D3;
+      --dim: #7E7E74;
+      --gold: #C9A227;
+      --bodoni: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+      --ivy: 'IvyPresto Headline', 'Instrument Serif', 'Bodoni 72', Didot, Georgia, serif;
+      --source: 'JuliaMono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --serial: 'B612 Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── The poster page ──
+       One poster, full screen. The poster fills the viewport up to its ideal
+       size and stops; past that its backdrop bleeds to the edges. It does not
+       know its own proportion: the same markup composes portrait, square and
+       landscape, switching layout on the stage's aspect ratio.
+
+       Scale is the root font-size, so every rem inside a poster is one unit of
+       the poster's own measure. A poster declares its design size in units,
+       --kw across and --kh down, and the unit is whichever is smaller: the
+       stage width over --kw or its height over --kh. A poster designed 22
+       units across reads the same at 353px on the wall and at 1200px full
+       screen; one that also declares a height stops growing when the room
+       runs out in that direction. --ideal-w, --ideal-h, --kw, --kh and the
+       bleed are written onto <html> by build.py from the poster's header. */
+    :root {
+      --vh: 100vh;
+      --foot: 44px;                       /* the production line below the stage */
+      --stage-w: min(100vw, var(--ideal-w));
+      --stage-h: min(calc(var(--vh) - var(--foot)), var(--ideal-h));
+      font-size: min(calc(var(--stage-w) / var(--kw)), calc(var(--stage-h) / var(--kh)));
+      color-scheme: dark;
+    }
+    @supports (height: 100dvh) { :root { --vh: 100dvh; } }
+    /* Framed on the wall (/poster/<name>/#wall): no production line, the poster
+       is the whole viewport. */
+    :root:has(#wall:target) { --foot: 0px; }
+    #wall:target ~ .production { display: none; }
+
+    body {
+      min-height: var(--vh);
+      display: grid; grid-template-rows: 1fr auto; justify-items: center; align-items: center;
+      background: transparent; color: var(--ivory);
+      font-family: var(--serial); line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    .stage {
+      width: var(--stage-w); height: var(--stage-h);
+      container-type: size; container-name: stage;
+    }
+
+    .production {
+      height: var(--foot); display: inline-flex; align-items: center; padding: 0 16px;
+      font-family: var(--serial); font-size: 10px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--production, var(--dim));
+      transition: color 0.18s ease;
+    }
+    .production b { font-weight: 700; }
+    .production:hover { color: var(--production-hover, var(--ivory)); }
+
+    /* ── The poster itself ── */
+    .poster {
+      width: 100%; height: 100%;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      color: var(--ivory);
+    }
+    /* The common skeleton: a kicker line, the figure that takes the room, and a
+       foot carrying title, spec and status. Portrait stacks them. */
+    .poster > .fig { flex: 1 1 auto; min-height: 0; min-width: 0; }
+    .poster > .foot { margin-top: auto; }
+
+    /* Past a threshold the stack splits: figure left, foot right, kicker across
+       the top. A poster opts in with .split (from three-quarters square) or
+       .split-wide (from square — for figures that need the width), and may set
+       --cols and --gap. */
+    @container stage (min-aspect-ratio: 3 / 4) {
+      .poster.split {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .poster.split-wide {
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: var(--gap, 1.5rem);
+      }
+      .poster.split-wide > .kick { grid-column: 1 / -1; grid-row: 1; }
+      .poster.split-wide > .fig  { grid-column: 1; grid-row: 2; }
+      .poster.split-wide > .foot { grid-column: 2; grid-row: 2; align-self: end; min-width: 0; margin-top: 0; }
+    }
+
+    /* The spec block. Real facts, typeset per-poster. Never the billing-block
+       squeeze: no scaleX, no forced nowrap, no single shared micro-caps strip. */
+    .spec {
+      font-family: var(--serial); font-size: 0.44rem;
+      letter-spacing: 0.06em; line-height: 1.85; text-transform: uppercase;
+      color: var(--dim);
+    }
+    .status {
+      font-family: var(--serial); font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ivory);
+    }
+    /* ═══ Byte Glass — the pane ═══ */
+    .p-glass { --acc: #18B551; padding: 1rem 1.1rem; --gap: 1.6rem; }
+    .p-glass .fig {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.24rem;
+      align-content: start; overflow: hidden;
+    }
+    .p-glass .t {
+      background: #0A130D; border: 1px solid #143A22; border-radius: 3px;
+      padding: 0.22rem 0.3rem; min-width: 0;
+    }
+    .p-glass .t .k {
+      display: block; font-family: var(--source); font-size: 0.32rem;
+      letter-spacing: 0.05em; color: #4E6B58; text-transform: uppercase;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .p-glass .t .v {
+      display: block; font-family: var(--source); font-size: 0.4rem;
+      color: #B6E4C2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .p-glass .t.w2 { grid-column: span 2; }
+    .p-glass .t.w3 { grid-column: span 3; }
+    .p-glass .t.on  .v { color: #00FF66; }
+    .p-glass .t.off .v { color: #4E6B58; }
+    .p-glass .t.uuid .v, .p-glass .t.arn .v { color: #D7FFE3; }
+    .p-glass .foot { padding-top: 0.7rem; }
+    .p-glass .title {
+      font-family: var(--bodoni); font-weight: 700; font-size: 2.2rem;
+      color: #D7FFE3; line-height: 0.95;
+    }
+    .p-glass .spec { color: #4E6B58; }
+    .p-glass .status { color: #18B551; font-size: 0.48rem; margin-top: 0.3rem; }
+
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .p-glass { --cols: 1.25fr 1fr; }
+      .p-glass .fig { align-content: center; }
+      .p-glass .foot { padding-top: 0; }
+    }
+  </style>
+</head>
+<body>
+  <i id="wall" hidden></i>
+  <div class="stage">
+      <a class="poster split-wide p-glass" href="https://byte.glass">
+        <div class="fig">
+          <div class="t w3 arn"><span class="k">ARN</span><span class="v">arn:aws:cloudfront::123456789012:distribution/EXAMPLE01</span></div>
+          <div class="t"><span class="k">Id</span><span class="v">EXAMPLE01</span></div>
+          <div class="t"><span class="k">ETag</span><span class="v">EQ9GUXP7DB6TU</span></div>
+          <div class="t w2"><span class="k">DomainName</span><span class="v">d1u5cfzl5vl54b.cloudfront.net</span></div>
+          <div class="t"><span class="k">Status</span><span class="v">Deployed</span></div>
+          <div class="t on"><span class="k">AdminEnabled</span><span class="v">✓</span></div>
+          <div class="t on"><span class="k">Enabled</span><span class="v">✓</span></div>
+          <div class="t on"><span class="k">IsIPV6Enabled</span><span class="v">✓</span></div>
+          <div class="t off"><span class="k">Staging</span><span class="v">✕</span></div>
+          <div class="t"><span class="k">HttpVersion</span><span class="v">HTTP1_1</span></div>
+          <div class="t"><span class="k">ConnectionMode</span><span class="v">direct</span></div>
+          <div class="t w2"><span class="k">PriceClass</span><span class="v">PriceClass_All</span></div>
+          <div class="t w2 uuid"><span class="k">LastModifiedTime</span><span class="v">1747779236.985</span></div>
+          <div class="t"><span class="k">Origins</span><span class="v">list(1)</span></div>
+          <div class="t"><span class="k">Aliases</span><span class="v">list(1)</span></div>
+          <div class="t"><span class="k">AliasICPRecordals</span><span class="v">list(1)</span></div>
+          <div class="t"><span class="k">CacheBehaviors</span><span class="v">list(0)</span></div>
+          <div class="t"><span class="k">OriginGroups</span><span class="v">list(0)</span></div>
+          <div class="t"><span class="k">CustomErrorResponses</span><span class="v">list(0)</span></div>
+          <div class="t w2"><span class="k">DefaultCacheBehavior</span><span class="v">obj(20)</span></div>
+          <div class="t w2"><span class="k">ViewerCertificate</span><span class="v">obj(7)</span></div>
+          <div class="t"><span class="k">Logging</span><span class="v">obj(4)</span></div>
+          <div class="t"><span class="k">Restrictions</span><span class="v">obj(1)</span></div>
+        </div>
+        <div class="foot">
+          <p class="title">Byte Glass</p>
+          <p class="spec">a pane you see bytes through<br>arns, uuids, urls and timestamps become shapes, not characters<br>fixture — aws cloudfront listdistributions, items[0], 17,232 bytes<br>29 keys → 23 tiles · 6 empty or null deleted · 13 scalars, 10 containers<br>account and distribution id replaced with aws doc examples</p>
+          <p class="status">in development</p>
+        </div>
+      </a>
+  </div>
+  <a class="production" href="/">an <b>X-AMZ</b> production</a>
+
+  <script src="/js/base256.js"></script>
+  <script src="/js/sha256.js"></script>
+  <script src="/js/ornaments.js"></script>
+  <script src="/js/code128.js"></script>
+  <script>
+  (function () {
+    'use strict';
+  })();
+  </script>
+</body>
+</html>

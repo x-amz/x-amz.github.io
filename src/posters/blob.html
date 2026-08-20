@@ -1,12 +1,12 @@
-<!-- blob -->
+<!-- {"title": "blob", "description": "A base-256 Braille codec as a Shortcuts toolkit. Eleven actions; auto_detect tries eight recognizers in order and blob is never guessed.", "ideal": [1200, 1700], "k": 22, "bleed": "#030705"} -->
 <style>
     /* ═══ blob — the action rail ═══ */
-    .p-blob { --acc: #00FF66; background: #030705; padding: 1.1rem 1rem; }
+    .p-blob { --acc: #00FF66; padding: 1.1rem 1rem; }
     .p-blob .kick {
       font-family: var(--source); font-size: 0.48rem; letter-spacing: 0.2em;
       text-transform: uppercase; color: #18B551;
     }
-    .p-blob .rail { flex: 1; min-height: 0; margin-top: 0.7rem; display: flex; flex-direction: column; }
+    .p-blob .fig { margin-top: 0.7rem; display: flex; flex-direction: column; }
     .p-blob .grp {
       font-family: var(--serial); font-size: 0.4rem; letter-spacing: 0.22em;
       text-transform: uppercase; color: #4E6B58; margin-bottom: 0.3rem;
@@ -41,11 +41,16 @@
     }
     .p-blob .spec { color: #4E6B58; text-transform: none; letter-spacing: 0.02em; }
     .p-blob .status { color: #D7FFE3; font-size: 0.52rem; margin-top: 0.35rem; }
+
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .p-blob { padding: 1.1rem 1.4rem; --cols: 1.15fr 1fr; --gap: 2rem; }
+      .p-blob .fig { margin-top: 0.5rem; }
+    }
 </style>
 
-      <a class="poster poster--app p-blob" href="https://byte.glass/blob/">
+      <a class="poster split-wide p-blob" href="https://byte.glass/blob/">
         <p class="kick">shortcuts actions · dev.amz.blob</p>
-        <div class="rail">
+        <div class="fig">
           <p class="grp">bytes in</p>
           <ol class="acts">
             <li><b>01</b> Read Bytes</li>
@@ -76,7 +81,9 @@ and stops at the first that accepts:</p>
             <span class="v">⠊⢖⠞⠞⢾</span><br>
             Print Hex → 48 65 6c 6c 6f</p>
         </div>
-        <p class="title">blob</p>
-        <p class="spec">base-256 braille codec · u+2800–28ff<br>auto_detect tries 8 recognizers in order; blob is never guessed<br>codec ships as swift-base256-blob, mit</p>
-        <p class="status">App Store</p>
+        <div class="foot">
+          <p class="title">blob</p>
+          <p class="spec">base-256 braille codec · u+2800–28ff<br>auto_detect tries 8 recognizers in order; blob is never guessed<br>codec ships as swift-base256-blob, mit</p>
+          <p class="status">App Store</p>
+        </div>
       </a>

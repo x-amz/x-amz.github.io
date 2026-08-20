@@ -1,11 +1,10 @@
-<!-- Byte Glass (double-wide) -->
+<!-- {"title": "Byte Glass", "description": "A pane you see bytes through. ARNs, UUIDs, URLs and timestamps become shapes, not characters.", "ideal": [1200, 1700], "k": 22, "bleed": "#050A07"} -->
 <style>
-    /* ═══ Byte Glass — the pane (double-wide) ═══ */
-    .p-glass { --acc: #18B551; background: #050A07; padding: 1rem 1.1rem; }
-    .p-glass .inner { display: flex; flex-direction: column; gap: 0.7rem; flex: 1; min-height: 0; }
-    .p-glass .pane {
+    /* ═══ Byte Glass — the pane ═══ */
+    .p-glass { --acc: #18B551; padding: 1rem 1.1rem; --gap: 1.6rem; }
+    .p-glass .fig {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.24rem;
-      align-content: start; min-height: 0; overflow: hidden;
+      align-content: start; overflow: hidden;
     }
     .p-glass .t {
       background: #0A130D; border: 1px solid #143A22; border-radius: 3px;
@@ -25,46 +24,50 @@
     .p-glass .t.on  .v { color: #00FF66; }
     .p-glass .t.off .v { color: #4E6B58; }
     .p-glass .t.uuid .v, .p-glass .t.arn .v { color: #D7FFE3; }
-    .p-glass .side { margin-top: auto; }
+    .p-glass .foot { padding-top: 0.7rem; }
     .p-glass .title {
       font-family: var(--bodoni); font-weight: 700; font-size: 2.2rem;
       color: #D7FFE3; line-height: 0.95;
     }
     .p-glass .spec { color: #4E6B58; }
     .p-glass .status { color: #18B551; font-size: 0.48rem; margin-top: 0.3rem; }
+
+    @container stage (min-aspect-ratio: 1 / 1) {
+      .p-glass { --cols: 1.25fr 1fr; }
+      .p-glass .fig { align-content: center; }
+      .p-glass .foot { padding-top: 0; }
+    }
 </style>
 
-      <a class="poster poster--app p-glass" href="https://byte.glass">
-        <div class="inner">
-          <div class="pane">
-            <div class="t w3 arn"><span class="k">ARN</span><span class="v">arn:aws:cloudfront::123456789012:distribution/EXAMPLE01</span></div>
-            <div class="t"><span class="k">Id</span><span class="v">EXAMPLE01</span></div>
-            <div class="t"><span class="k">ETag</span><span class="v">EQ9GUXP7DB6TU</span></div>
-            <div class="t w2"><span class="k">DomainName</span><span class="v">d1u5cfzl5vl54b.cloudfront.net</span></div>
-            <div class="t"><span class="k">Status</span><span class="v">Deployed</span></div>
-            <div class="t on"><span class="k">AdminEnabled</span><span class="v">✓</span></div>
-            <div class="t on"><span class="k">Enabled</span><span class="v">✓</span></div>
-            <div class="t on"><span class="k">IsIPV6Enabled</span><span class="v">✓</span></div>
-            <div class="t off"><span class="k">Staging</span><span class="v">✕</span></div>
-            <div class="t"><span class="k">HttpVersion</span><span class="v">HTTP1_1</span></div>
-            <div class="t"><span class="k">ConnectionMode</span><span class="v">direct</span></div>
-            <div class="t w2"><span class="k">PriceClass</span><span class="v">PriceClass_All</span></div>
-            <div class="t w2 uuid"><span class="k">LastModifiedTime</span><span class="v">1747779236.985</span></div>
-            <div class="t"><span class="k">Origins</span><span class="v">list(1)</span></div>
-            <div class="t"><span class="k">Aliases</span><span class="v">list(1)</span></div>
-            <div class="t"><span class="k">AliasICPRecordals</span><span class="v">list(1)</span></div>
-            <div class="t"><span class="k">CacheBehaviors</span><span class="v">list(0)</span></div>
-            <div class="t"><span class="k">OriginGroups</span><span class="v">list(0)</span></div>
-            <div class="t"><span class="k">CustomErrorResponses</span><span class="v">list(0)</span></div>
-            <div class="t w2"><span class="k">DefaultCacheBehavior</span><span class="v">obj(20)</span></div>
-            <div class="t w2"><span class="k">ViewerCertificate</span><span class="v">obj(7)</span></div>
-            <div class="t"><span class="k">Logging</span><span class="v">obj(4)</span></div>
-            <div class="t"><span class="k">Restrictions</span><span class="v">obj(1)</span></div>
-          </div>
-          <div class="side">
-            <p class="title">Byte Glass</p>
-            <p class="spec">a pane you see bytes through<br>arns, uuids, urls and timestamps become shapes, not characters<br>fixture — aws cloudfront listdistributions, items[0], 17,232 bytes<br>29 keys → 23 tiles · 6 empty or null deleted · 13 scalars, 10 containers<br>account and distribution id replaced with aws doc examples</p>
-            <p class="status">in development</p>
-          </div>
+      <a class="poster split-wide p-glass" href="https://byte.glass">
+        <div class="fig">
+          <div class="t w3 arn"><span class="k">ARN</span><span class="v">arn:aws:cloudfront::123456789012:distribution/EXAMPLE01</span></div>
+          <div class="t"><span class="k">Id</span><span class="v">EXAMPLE01</span></div>
+          <div class="t"><span class="k">ETag</span><span class="v">EQ9GUXP7DB6TU</span></div>
+          <div class="t w2"><span class="k">DomainName</span><span class="v">d1u5cfzl5vl54b.cloudfront.net</span></div>
+          <div class="t"><span class="k">Status</span><span class="v">Deployed</span></div>
+          <div class="t on"><span class="k">AdminEnabled</span><span class="v">✓</span></div>
+          <div class="t on"><span class="k">Enabled</span><span class="v">✓</span></div>
+          <div class="t on"><span class="k">IsIPV6Enabled</span><span class="v">✓</span></div>
+          <div class="t off"><span class="k">Staging</span><span class="v">✕</span></div>
+          <div class="t"><span class="k">HttpVersion</span><span class="v">HTTP1_1</span></div>
+          <div class="t"><span class="k">ConnectionMode</span><span class="v">direct</span></div>
+          <div class="t w2"><span class="k">PriceClass</span><span class="v">PriceClass_All</span></div>
+          <div class="t w2 uuid"><span class="k">LastModifiedTime</span><span class="v">1747779236.985</span></div>
+          <div class="t"><span class="k">Origins</span><span class="v">list(1)</span></div>
+          <div class="t"><span class="k">Aliases</span><span class="v">list(1)</span></div>
+          <div class="t"><span class="k">AliasICPRecordals</span><span class="v">list(1)</span></div>
+          <div class="t"><span class="k">CacheBehaviors</span><span class="v">list(0)</span></div>
+          <div class="t"><span class="k">OriginGroups</span><span class="v">list(0)</span></div>
+          <div class="t"><span class="k">CustomErrorResponses</span><span class="v">list(0)</span></div>
+          <div class="t w2"><span class="k">DefaultCacheBehavior</span><span class="v">obj(20)</span></div>
+          <div class="t w2"><span class="k">ViewerCertificate</span><span class="v">obj(7)</span></div>
+          <div class="t"><span class="k">Logging</span><span class="v">obj(4)</span></div>
+          <div class="t"><span class="k">Restrictions</span><span class="v">obj(1)</span></div>
+        </div>
+        <div class="foot">
+          <p class="title">Byte Glass</p>
+          <p class="spec">a pane you see bytes through<br>arns, uuids, urls and timestamps become shapes, not characters<br>fixture — aws cloudfront listdistributions, items[0], 17,232 bytes<br>29 keys → 23 tiles · 6 empty or null deleted · 13 scalars, 10 containers<br>account and distribution id replaced with aws doc examples</p>
+          <p class="status">in development</p>
         </div>
       </a>

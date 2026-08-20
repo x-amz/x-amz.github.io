@@ -1,16 +1,19 @@
-[
-  "requiem",
-  "req",
-  "shf",
-  "spec",
-  "vet",
-  "sigtok",
-  "iam",
-  "arn",
-  "date",
-  "sigv4",
-  "glass",
-  "blob",
-  "b256",
-  "hmac"
-]
+{
+  "note": "Poster inventory: name → the frame the wall pins it in. Shape is the wall's decision, never the poster's; the poster page composes itself to whatever box it is given.",
+  "posters": {
+    "requiem": "app",
+    "req": "site",
+    "shf": "shelf",
+    "spec": "sheet",
+    "vet": "service",
+    "sigtok": "app",
+    "iam": "service",
+    "arn": "service",
+    "date": "site",
+    "sigv4": "lib",
+    "glass": "app",
+    "blob": "app",
+    "b256": "lib",
+    "hmac": "site"
+  }
+}

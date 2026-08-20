@@ -1,14 +1,17 @@
-<!-- x-amz.date -->
+<!-- {"title": "x-amz.date", "description": "A CloudFront function returning the current time in the format the x-amz-date header takes.", "ideal": [1000, 1500], "k": [16.6, 24], "bleed": "#060605"} -->
 <style>
     /* ═══ x-amz.date — the spine and the band ═══ */
-    .p-date { --acc: #E6E1D3; background: #060605; }
-    .p-date .inner { display: grid; grid-template-columns: 1fr auto; flex: 1; min-height: 0; }
+    .p-date { --acc: #E6E1D3; }
+    .p-date .fig { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
     .p-date .spine {
       display: flex; flex-direction: column; justify-content: center;
-      padding: 1rem 0 1rem 1.1rem;
+      padding: 1rem 0 1rem 1.1rem; min-height: 0;
     }
+    /* Sixteen characters divide the spine's height, whatever it is: the glyph
+       shrinks before it overflows, and never grows past its set size. */
     .p-date .spine span {
-      font-family: var(--serial); font-weight: 700; font-size: 1.55rem;
+      font-family: var(--serial); font-weight: 700;
+      font-size: clamp(0.5rem, calc((100cqh - 12rem) / 16.4), 1.1rem);
       line-height: 1.02; color: #FFFFFF; letter-spacing: 0.02em;
     }
     .p-date .spine span.sep { color: #55554E; }
@@ -18,25 +21,32 @@
       text-transform: uppercase; color: #55554E;
       padding: 1.1rem 0.85rem; text-align: right;
     }
-    .p-date .band {
-      background: #E6E1D3; padding: 0.5rem 0.8rem 0.4rem;
-    }
+    .p-date .band { background: #E6E1D3; padding: 0.5rem 0.8rem 0.4rem; }
     .p-date .band svg { display: block; width: 100%; height: 2.2rem; }
     .p-date .band .lbl {
       font-family: var(--serial); font-size: 0.38rem; letter-spacing: 0.14em;
       text-transform: uppercase; color: #3A3A34; margin-top: 0.2rem;
     }
-    .p-date .foot { padding: 0.8rem 1.1rem 1rem; }
+    .p-date .foot { padding: 0.8rem 1.1rem 1rem; margin-top: 0; }
     .p-date .title {
-      font-family: var(--serial); font-weight: 700; font-size: 1.05rem;
-      letter-spacing: 0.16em; color: #E6E1D3;
+      font-family: var(--serial); font-weight: 700; font-size: 0.85rem;
+      letter-spacing: 0.12em; color: #E6E1D3;
     }
-    .p-date .spec { color: #5C5C54; }
-    .p-date .status { font-size: 0.46rem; color: #9A9A90; margin-top: 0.2rem; }
+    .p-date .spec { color: #5C5C54; font-size: 0.4rem; line-height: 1.75; }
+    .p-date .status { font-size: 0.5rem; letter-spacing: 0.18em; color: #9A9A90; margin-top: 0.2rem; }
+
+    /* From three-quarters square upward the stamp lies across the top as a
+       line, sized to the width it has. */
+    @container stage (min-aspect-ratio: 3 / 4) {
+      .p-date .fig { grid-template-columns: 1fr; grid-template-rows: auto auto; align-content: center; }
+      .p-date .spine { flex-direction: row; justify-content: center; padding: 1rem 1.1rem 0.4rem; }
+      .p-date .spine span { font-size: min(2.6rem, 5.6cqw); }
+      .p-date .side { writing-mode: horizontal-tb; text-align: center; padding: 0 1.1rem 0.9rem; }
+    }
 </style>
 
-      <a class="poster poster--site p-date" href="https://x-amz.date">
-        <div class="inner">
+      <a class="poster p-date" href="https://x-amz.date">
+        <div class="fig">
           <div class="spine" id="date-spine"></div>
           <div class="side">x-amz-date · 16 bytes · no-store</div>
         </div>

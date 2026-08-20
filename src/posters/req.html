@@ -1,37 +1,41 @@
-<!-- req.to -->
+<!-- {"title": "req.to", "description": "Universal links for .http requests. The request travels in the fragment and never reaches the server.", "ideal": [1000, 1500], "k": [16.6, 24], "bleed": "#0D1117"} -->
 <style>
     /* ═══ req.to — the punched tape ═══ */
-    .p-req { --acc: #58A6FF; background: #0D1117; padding: 1rem 0.9rem; text-align: center; }
+    .p-req { --acc: #58A6FF; padding: 1rem 0.9rem; text-align: center; }
     .p-req .kick {
       font-family: var(--serial); font-size: 0.42rem; letter-spacing: 0.24em;
       text-transform: uppercase; color: #484F58;
     }
-    .p-req .tape {
-      flex: 1; min-height: 0; margin: 0.7rem 0; display: grid; place-items: center;
-      overflow: hidden;
-    }
-    .p-req .tape svg { height: 100%; width: auto; max-width: 100%; }
+    .p-req .fig { margin: 0.7rem 0; display: grid; grid-template-rows: minmax(0, 1fr); place-items: center; overflow: hidden; }
+    .p-req .fig svg { height: 100%; width: auto; max-width: 100%; }
     .p-req .rd {
       font-family: var(--source); font-size: 0.42rem; line-height: 1.75;
       color: #8B949E; text-align: left; display: inline-block; white-space: pre;
     }
     .p-req .rd .e { color: #58A6FF; }
     .p-req .title {
-      font-family: var(--ivy); font-size: 2.3rem; color: #E6EDF3; line-height: 1; margin-top: 0.5rem;
+      font-family: var(--ivy); font-size: 1.75rem; color: #E6EDF3; line-height: 1; margin-top: 0.5rem;
     }
-    .p-req .spec { color: #484F58; }
-    .p-req .status { color: #8B949E; font-size: 0.46rem; margin-top: 0.25rem; }
+    .p-req .spec { color: #484F58; font-size: 0.4rem; line-height: 1.75; }
+    .p-req .status { color: #8B949E; font-size: 0.5rem; letter-spacing: 0.18em; margin-top: 0.25rem; }
+
+    @container stage (min-aspect-ratio: 23 / 20) {
+      .p-req { text-align: left; padding: 1.1rem 1.4rem; }
+      .p-req .fig { margin: 0; }
+    }
 </style>
 
-      <a class="poster poster--site p-req" href="https://req.to">
+      <a class="poster split p-req" href="https://req.to">
         <p class="kick">universal link · the request travels in the fragment</p>
-        <div class="tape" id="req-tape" aria-label="8-level punched tape of the encoded request"></div>
-        <pre class="rd"><span class="e">req.to/#UE9TVCBodHRw…</span>
+        <div class="fig" id="req-tape" aria-label="8-level punched tape of the encoded request"></div>
+        <div class="foot">
+          <pre class="rd"><span class="e">req.to/#UE9TVCBodHRw…</span>
 POST https://httpbin.org/post
 content-type: application/json</pre>
-        <p class="title">req.to</p>
-        <p class="spec">http text split on blank lines, each section base64url, joined with "."<br>the fragment is never sent to the server — rfc 3986 §3.5<br>no account, no shortener table, nothing stored<br>universal links into requiem today · the req cli's home when it ships</p>
-        <p class="status">live · static · no server state</p>
+          <p class="title">req.to</p>
+          <p class="spec">http text split on blank lines, each section base64url, joined with "."<br>the fragment is never sent to the server — rfc 3986 §3.5<br>no account, no shortener table, nothing stored<br>universal links into requiem today · the req cli's home when it ships</p>
+          <p class="status">live · static · no server state</p>
+        </div>
       </a>
 
 <script>
@@ -44,7 +48,17 @@ content-type: application/json</pre>
       tapeEl.innerHTML = Ornaments.tapeSVG(bytes.slice(0, 22), {
         cell: 13, ink: '#58A6FF', dim: 'rgba(88,166,255,0.22)'
       });
+      // The tape is drawn as a strip; stand it on end by transposing the
+      // viewBox, so the element itself is upright and sizes like any image.
       var svg = tapeEl.querySelector('svg');
-      if (svg) { svg.removeAttribute('width'); svg.removeAttribute('height'); svg.style.transform = 'rotate(90deg)'; }
+      if (svg) {
+        var vb = svg.getAttribute('viewBox').split(/\s+/).map(Number), w = vb[2], h = vb[3];
+        var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('transform', 'rotate(90) translate(0 ' + (-h) + ')');
+        while (svg.firstChild) g.appendChild(svg.firstChild);
+        svg.appendChild(g);
+        svg.setAttribute('viewBox', '0 0 ' + h + ' ' + w);
+        svg.removeAttribute('width'); svg.removeAttribute('height');
+      }
     }
 </script>
