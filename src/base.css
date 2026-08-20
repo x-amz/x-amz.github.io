@@ -49,41 +49,52 @@
     }
     .mast .rule { width: 8rem; height: 1px; background: var(--gold); margin: 2rem auto 0; }
 
-    /* ── Domain sections ── */
-    .domain { margin-top: 4.5rem; }
-    .domain:first-of-type { margin-top: 0; }
-    .domain-head {
-      display: flex; align-items: baseline; gap: 1rem;
-      margin-bottom: 1.7rem;
+    /* ── The component diagram ── */
+    .axis {
+      font-family: var(--serial); font-size: 0.6rem; letter-spacing: 0.24em;
+      text-transform: uppercase; color: var(--dim); text-align: center;
+      margin-bottom: 2.5rem;
     }
-    .domain-head h2 {
-      font-family: var(--serial); font-weight: 700; font-size: 0.68rem;
-      letter-spacing: 0.3em; text-transform: uppercase; color: var(--ivory);
-      white-space: nowrap;
+    .diagram { position: relative; }
+    .edges {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; overflow: visible; z-index: 0;
     }
-    .domain-sub {
-      font-family: var(--ivy); font-style: italic; font-size: 0.9rem;
-      color: var(--dim); white-space: nowrap;
+    .edge { fill: none; stroke-width: 1; }
+    .edge--code     { stroke: #C9A227; }
+    .edge--contract { stroke: #7E7E74; stroke-dasharray: 5 4; }
+    .edge--planned  { stroke: #4A4A44; stroke-dasharray: 1 4; stroke-linecap: round; }
+    .edge-head--code     { fill: #C9A227; }
+    .edge-head--contract { fill: #7E7E74; }
+    .edge-head--planned  { fill: #4A4A44; }
+
+    .layer {
+      position: relative; z-index: 1;
+      display: flex; flex-wrap: wrap; justify-content: center;
+      align-items: flex-start;
+      gap: 2.25rem;
+      margin-bottom: 4.5rem;
     }
-    .domain-rule { flex: 1; height: 1px; background: var(--wall-hair); }
-    .domain-n {
-      font-family: var(--serial); font-size: 0.58rem; letter-spacing: 0.2em;
-      color: var(--dim);
+    .layer:last-child { margin-bottom: 0; }
+
+    .legend {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 1.6rem;
+      margin-top: 3.5rem;
+      font-family: var(--serial); font-size: 0.55rem; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--dim);
     }
-    @media (max-width: 660px) {
-      .domain-head { flex-wrap: wrap; gap: 0.4rem 0.8rem; }
-      .domain-sub { white-space: normal; }
+    .legend .k { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .legend .k::before {
+      content: ''; width: 1.9rem; height: 0; border-top-width: 1px; border-top-style: solid;
     }
+    .legend .k-code::before     { border-color: #C9A227; }
+    .legend .k-contract::before { border-color: #7E7E74; border-top-style: dashed; }
+    .legend .k-planned::before  { border-color: #4A4A44; border-top-style: dotted; }
 
     /* ── The wall ──
        Poster footprint tracks the product's scope as envisioned, not its
        current shipping state: applications large, services and standards
        medium, single-purpose endpoints and libraries small. */
-    .wall {
-      display: flex; flex-wrap: wrap;
-      gap: 2.25rem;
-      align-items: flex-start;
-    }
 
     .poster {
       position: relative;
@@ -95,7 +106,31 @@
       transition: border-color 0.18s ease, transform 0.18s ease;
     }
     a.poster:hover, a.poster:focus-visible { border-color: var(--acc, var(--gold)); transform: translateY(-3px); }
-    @media (prefers-reduced-motion: reduce) { .poster { transition: none; } }
+
+    /* Posters with nowhere to go. Without this they read as broken links: the
+       cursor says nothing, the plate does not lift, and the wall looks dead in
+       two places. The bar carries the real reason, not a generic "coming soon". */
+    .poster--unreleased { cursor: not-allowed; }
+    .poster--unreleased:hover { border-color: var(--dim); border-style: dashed; }
+    .poster--unreleased::after {
+      content: attr(data-unreleased);
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 0.55rem 0.7rem;
+      font-family: var(--serial); font-size: 0.5rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; text-align: center;
+      color: var(--jet); background: var(--dim);
+      transform: translateY(100%);
+      transition: transform 0.18s ease;
+    }
+    .poster--unreleased:hover::after { transform: translateY(0); }
+    /* Where there is no hover there is also no click to mislead anyone, and the
+       status line already says as much — so the bar stays out of the way. */
+    @media (hover: none) { .poster--unreleased::after { content: none; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .poster { transition: none; }
+      .poster--unreleased::after { transition: none; }
+    }
 
     /* Footprint variants — shape carries meaning.
        Apps hold portrait, at phone proportion. Libraries lie landscape beneath
@@ -105,14 +140,18 @@
     .poster--app  { width: clamp(300px, 30vw, 353px); aspect-ratio: 27 / 40; }
     .poster--service { width: clamp(300px, 30vw, 353px); aspect-ratio: 27 / 40; }
     .poster--site { width: clamp(238px, 22vw, 266px); aspect-ratio: 27 / 40; }
-    .poster--lib  { width: clamp(300px, 63vw, 742px); aspect-ratio: 2.5 / 1; }
+    .poster--lib  { width: clamp(300px, 63vw, 742px); aspect-ratio: 2.2 / 1; }
+    /* The composite library spans the apps it carries; the primitives below it
+       are narrower, so width reads as reach. */
+    .poster--shelf { width: 100%; aspect-ratio: 3.4 / 1; }
     .poster--sheet { aspect-ratio: 8.5 / 11; }
     @media (max-width: 900px) {
       .poster--lib { width: 100%; aspect-ratio: 1.9 / 1; }
+      .poster--shelf { aspect-ratio: 2.4 / 1; }
     }
     @media (max-width: 660px) {
-      .poster, .poster--app, .poster--site, .poster--lib { width: 100%; }
-      .poster--lib { aspect-ratio: 27 / 30; }
+      .poster, .poster--app, .poster--site, .poster--lib, .poster--shelf { width: 100%; }
+      .poster--lib, .poster--shelf { aspect-ratio: 27 / 30; }
     }
 
     /* Sites carry the same body type — 7px is the floor — so only the display

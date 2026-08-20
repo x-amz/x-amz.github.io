@@ -27,8 +27,17 @@
       <div class="rule" aria-hidden="true"></div>
     </header>
 
-    <main aria-label="Products by domain">
+    <p class="axis">Each poster sits above what it depends on.</p>
+
+    <main class="diagram" aria-label="Products, arranged by dependency">
+      <svg class="edges" aria-hidden="true"></svg>
 <!--{ sections }-->    </main>
+
+    <p class="legend" aria-hidden="true">
+      <span class="k k-code">declared dependency</span>
+      <span class="k k-contract">shared format or protocol</span>
+      <span class="k k-planned">planned, not yet built</span>
+    </p>
 
     <footer>
       <p>
@@ -43,9 +52,12 @@
   <script src="/js/sha256.js"></script>
   <script src="/js/ornaments.js"></script>
   <script src="/js/code128.js"></script>
+  <script src="/js/edges.js"></script>
   <script>
   (function () {
     'use strict';
+
+    Edges.draw(<!--{ graph }-->);
 <!--{ poster scripts }-->  })();
   </script>
 </body>

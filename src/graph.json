@@ -1,0 +1,110 @@
+{
+  "note": "Dependency graph across the wall. `kind` is how the edge is evidenced: code = declared in a manifest and verifiable; contract = a shared format or protocol with no code dependency; planned = intended, not yet built. Tier is computed by build.py as the longest dependency chain starting at a node, so every poster sits above everything it depends on.",
+  "edges": [
+    {
+      "from": "requiem",
+      "to": "shf",
+      "kind": "code",
+      "why": "consumes swift-http-files as a remote SPM package"
+    },
+    {
+      "from": "requiem",
+      "to": "spec",
+      "kind": "contract",
+      "why": "reads and writes .http documents"
+    },
+    {
+      "from": "shf",
+      "to": "b256",
+      "kind": "code",
+      "why": "ContentFormats depends on Base256 and re-exports it"
+    },
+    {
+      "from": "shf",
+      "to": "sigv4",
+      "kind": "code",
+      "why": "HttpAws carries the SigV4 dependency alone"
+    },
+    {
+      "from": "shf",
+      "to": "spec",
+      "kind": "contract",
+      "why": "implements the format the spec defines"
+    },
+    {
+      "from": "req",
+      "to": "requiem",
+      "kind": "contract",
+      "why": "RequestLink encoding shared with the app; universal links resolve into it"
+    },
+    {
+      "from": "req",
+      "to": "shf",
+      "kind": "planned",
+      "why": "becomes the req CLI's page once that ships"
+    },
+    {
+      "from": "vet",
+      "to": "spec",
+      "kind": "contract",
+      "why": "every probe anchor must resolve to a statement in the spec"
+    },
+    {
+      "from": "vet",
+      "to": "shf",
+      "kind": "contract",
+      "why": "grades req as one of seven lanes, from source"
+    },
+    {
+      "from": "blob",
+      "to": "b256",
+      "kind": "code",
+      "why": "consumes the extracted codec; no in-app copy remains"
+    },
+    {
+      "from": "sigtok",
+      "to": "sigv4",
+      "kind": "code",
+      "why": "SigV4 product from swift-sigv4"
+    },
+    {
+      "from": "sigtok",
+      "to": "b256",
+      "kind": "code",
+      "why": "binary outputs travel through Shortcuts as Base256 text"
+    },
+    {
+      "from": "sigtok",
+      "to": "iam",
+      "kind": "planned",
+      "why": "federation via sts:AssumeRoleWithWebIdentity against iam.pub"
+    },
+    {
+      "from": "arn",
+      "to": "iam",
+      "kind": "planned",
+      "why": "the authenticated lane assumes a role through iam.pub"
+    }
+  ],
+  "isolated": {
+    "glass": "no dependency on anything else in the tree",
+    "date": "a single edge function; nothing here depends on it",
+    "hmac": "a single edge function; exposes the chain SigV4 derives"
+  },
+  "order": [
+    "requiem",
+    "req",
+    "vet",
+    "sigtok",
+    "blob",
+    "arn",
+    "shf",
+    "b256",
+    "date",
+    "sigv4",
+    "hmac",
+    "spec",
+    "glass",
+    "iam"
+  ]
+}
