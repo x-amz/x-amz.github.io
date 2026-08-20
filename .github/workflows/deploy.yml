@@ -1,0 +1,68 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Fonts come from the private x-amz/webfonts release pinned in
+      # FONTS_VERSION; they are fetched here and never committed.
+      - uses: actions/create-github-app-token@v2
+        id: fonts-token
+        with:
+          app-id: ${{ vars.FONTS_APP_ID }}
+          private-key: ${{ secrets.FONTS_APP_KEY }}
+          owner: x-amz
+          repositories: webfonts
+      - name: Fetch webfonts
+        env:
+          GH_TOKEN: ${{ steps.fonts-token.outputs.token }}
+        run: |
+          # Actions runs `bash -e` without pipefail, so a piped `gh ... | tar`
+          # exits 0 when the download fails and the site deploys with no faces
+          # and a green tick. Download to a file, then assert what landed.
+          set -euo pipefail
+          version=$(cat FONTS_VERSION)
+          mkdir -p fonts
+          gh release download "$version" --repo x-amz/webfonts \
+            --pattern x-amz-dev.tar.gz --dir "$RUNNER_TEMP"
+          tar xzf "$RUNNER_TEMP/x-amz-dev.tar.gz" -C fonts
+          test -f fonts/fonts.css
+          faces=$(find fonts -name '*.woff2' | wc -l | tr -d ' ')
+          [ "$faces" -gt 0 ]
+          echo "fetched $faces faces from $version"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 build.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

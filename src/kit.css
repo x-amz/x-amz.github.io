@@ -3,8 +3,8 @@
     @font-face { font-family: 'Bodoni Moda'; font-style: italic; font-weight: 400 900; src: url('/fonts/BodoniModa-Italic-var-latin.woff2') format('woff2'); font-display: swap; }
     @font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; src: url('/fonts/InstrumentSerif-Regular-latin.woff2') format('woff2'); font-display: swap; }
     @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('/fonts/InstrumentSerif-Italic-latin.woff2') format('woff2'); font-display: swap; }
-    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 400; src: url('/fonts/JuliaMono-Regular.woff2') format('woff2'); font-display: swap; }
-    @font-face { font-family: 'JuliaMono'; font-style: normal; font-weight: 700; src: url('/fonts/JuliaMono-Bold.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Source JM'; font-style: normal; font-weight: 400; src: url('/fonts/SourceJM-Regular-latin-braille.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'Source JM'; font-style: normal; font-weight: 700; src: url('/fonts/SourceJM-Bold-latin-braille.woff2') format('woff2'); font-display: swap; }
     @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 400; src: url('/fonts/B612Mono-Regular-latin.woff2') format('woff2'); font-display: swap; }
     @font-face { font-family: 'B612 Mono'; font-style: normal; font-weight: 700; src: url('/fonts/B612Mono-Bold-latin.woff2') format('woff2'); font-display: swap; }
 
@@ -14,9 +14,14 @@
       --ivory: #E6E1D3;
       --dim: #7E7E74;
       --gold: #C9A227;
-      --bodoni: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
-      --ivy: 'IvyPresto Headline', 'Instrument Serif', 'Bodoni 72', Didot, Georgia, serif;
-      --source: 'JuliaMono', ui-monospace, 'SF Mono', Menlo, monospace;
-      --serial: 'B612 Mono', ui-monospace, monospace;
+      /* Type comes from the x-amz-dev bundle in x-amz/webfonts: fonts.css
+         declares the faces and the --font-* roles; these are the site's names
+         for them. */
+      --bodoni: var(--font-serif);
+      --masthead: var(--font-masthead);
+      --ivy: var(--font-display);
+      --source: var(--font-source);
+      --serial: var(--font-serial);
+      --braille: var(--font-braille);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

@@ -8,27 +8,37 @@ to whatever viewport it is given. The wall at / is a grid of frames: one
 <iframe> per poster, pinned to the size and proportion src/posters.json
 assigns, stacked into the dependency tiers src/graph.json implies.
 
-The output is committed: GitHub Pages serves it directly. There is no
-dependency beyond the standard library.
+Type comes from the x-amz-dev bundle in the private x-amz/webfonts repo,
+fetched into fonts/ (see fetch-fonts.sh and .github/workflows/deploy.yml):
+its fonts.css and preload.html are inlined into both shells. Everything is
+written to dist/, which the deploy workflow hands to GitHub Pages. Nothing
+generated is committed. There is no dependency beyond the standard library.
 
 Why not Jekyll, which Pages would run for free: the http-files.org poster
 prints `{{host}}` as part of a real .http specimen, and Liquid would consume
 it. `.nojekyll` stays, and the placeholders here are HTML comments for the
 same reason.
 
-    python3 build.py            # write index.html and poster/*/index.html
-    python3 build.py --check    # exit 1 if any output is stale
+    ./fetch-fonts.sh            # once, and after a FONTS_VERSION bump
+    python3 build.py            # write dist/
 """
 
 import json
 import os
 import re
+import shutil
 import sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(ROOT, 'src')
+FONTS = os.path.join(ROOT, 'fonts')
+DIST = os.path.join(ROOT, 'dist')
+
+# Served as they are, beside the generated pages.
+STATIC = ('js', 'fonts', 'favicon.png', 'combined.png', 'blob', 'support', 'requiem', '.nojekyll', 'CNAME')
 
 SHAPES = ('app', 'service', 'site', 'lib', 'shelf', 'sheet')
+
 
 
 def read(*parts):
@@ -96,8 +106,6 @@ def esc(s):
     return s.replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;')
 
 
-# ── The graph ───────────────────────────────────────────────────────────────
-
 def tiers(nodes, edges):
     """Tier = the longest dependency chain starting at a node, so every poster
     sits above everything it depends on. Raises on a cycle."""
@@ -125,7 +133,7 @@ def tiers(nodes, edges):
 
 # ── Outputs ─────────────────────────────────────────────────────────────────
 
-def poster_page(c, shell, kit, poster_css):
+def poster_page(c, shell, fonts, kit, poster_css):
     meta = c['meta']
     w, h = meta['ideal']
     k = meta['k'] if isinstance(meta['k'], list) else [meta['k'], meta['k']]
@@ -138,6 +146,8 @@ def poster_page(c, shell, kit, poster_css):
     page = page.replace('<!--{ name }-->', c['name'])
     page = page.replace('<!--{ title }-->', esc(meta['title']))
     page = page.replace('<!--{ description }-->', esc(description))
+    page = page.replace('<!--{ font preloads }-->\n', fonts['preload'])
+    page = page.replace('<!--{ fonts.css }-->', fonts['css'])
     page = page.replace('<!--{ kit.css }-->', kit)
     page = page.replace('<!--{ poster.css }-->', poster_css)
     page = page.replace('<!--{ poster style }-->', c['style'])
@@ -151,72 +161,96 @@ def wall_slot(c, shape):
     through to the poster's own page — and the hover ring; the page inside is
     display only."""
     label = esc(c['attrs'].get('aria-label') or c['meta']['title'])
-    return (f'        <a class="poster poster--{shape}" data-node="{c["name"]}" style="--acc:{c["acc"]}" '
+    style = esc(f'--acc:{c["acc"]};background:{c["meta"]["bleed"]}')
+    return (f'        <a class="poster poster--{shape}" data-node="{c["name"]}" style="{style}" '
             f'href="/poster/{c["name"]}/" aria-label="{label}">'
             f'<iframe src="/poster/{c["name"]}/#wall" title="{esc(c["meta"]["title"])}" '
-            f'loading="lazy" tabindex="-1" aria-hidden="true"></iframe></a>\n')
+            f'tabindex="-1" aria-hidden="true"></iframe></a>\n')
 
 
 def build():
-    inventory = json.loads(read(SRC, 'posters.json'))['posters']
+    spec = json.loads(read(SRC, 'posters.json'))
+    inventory = spec['posters']
     for name, shape in inventory.items():
         if shape not in SHAPES:
             fail(f'{name!r} has unknown shape {shape!r}')
+    # Every component gets a page; only the names in `wall` hang on the wall.
+    hung = spec.get('wall', list(inventory))
+    for name in hung:
+        if name not in inventory:
+            fail(f'wall names unknown poster {name!r}')
     graph = json.loads(read(SRC, 'graph.json'))
-    nodes = list(inventory)
-    depth = tiers(nodes, graph['edges'])
+    tiers(list(inventory), graph['edges'])            # the whole graph must be sound
+    edges = [e for e in graph['edges'] if e['from'] in hung and e['to'] in hung]
+    depth = tiers(hung, edges)
     order = graph.get('order', [])
 
     def rank(n):
         return order.index(n) if n in order else len(order)
 
     components = {}
-    for name in nodes:
+    for name in inventory:
         path = os.path.join(SRC, 'posters', name + '.html')
         if not os.path.exists(path):
             fail(f'posters.json names missing poster {name!r}')
         components[name] = parse_component(name, read(path))
 
+    if not os.path.exists(os.path.join(FONTS, 'fonts.css')):
+        fail('fonts/fonts.css is missing — run ./fetch-fonts.sh')
+    fonts = {
+        'css': indent(read(FONTS, 'fonts.css').rstrip(), 4),
+        'preload': ''.join('  ' + ln + '\n' for ln in read(FONTS, 'preload.html').split('\n') if ln.strip()),
+    }
     kit = read(SRC, 'kit.css').rstrip()
     outputs = {}
 
     shell = read(SRC, 'poster.html')
     poster_css = read(SRC, 'poster.css').rstrip()
     for name, c in components.items():
-        outputs[os.path.join('poster', name, 'index.html')] = poster_page(c, shell, kit, poster_css)
+        outputs[os.path.join('poster', name, 'index.html')] = poster_page(c, shell, fonts, kit, poster_css)
 
     blocks = []
     for tier in sorted(set(depth.values()), reverse=True):
         blocks.append(f'      <div class="layer" data-tier="{tier}">\n')
-        for name in sorted([n for n in nodes if depth[n] == tier], key=rank):
+        for name in sorted([n for n in hung if depth[n] == tier], key=rank):
             blocks.append(wall_slot(components[name], inventory[name]))
         blocks.append('      </div>\n\n')
 
     page = read(SRC, 'page.html')
+    page = page.replace('<!--{ font preloads }-->\n', fonts['preload'])
+    page = page.replace('<!--{ fonts.css }-->', fonts['css'])
     page = page.replace('<!--{ kit.css }-->', kit)
     page = page.replace('<!--{ base.css }-->', read(SRC, 'base.css').rstrip())
     page = page.replace('<!--{ sections }-->', ''.join(blocks))
-    page = page.replace('<!--{ graph }-->', json.dumps({'edges': graph['edges']}, separators=(',', ':')))
-    banner = (f'<!-- Generated by build.py from src/ — {len(nodes)} posters in '
+    page = page.replace('<!--{ graph }-->', json.dumps({'edges': edges}, separators=(',', ':')))
+    # <!--{ if wall }--> … <!--{ end }--> blocks only appear when something hangs.
+    page = re.sub(r'<!--\{ if wall \}-->\n(.*?)<!--\{ end \}-->\n',
+                  lambda m: m.group(1) if hung else '', page, flags=re.S)
+    banner = (f'<!-- Generated by build.py from src/ — {len(hung)} of {len(inventory)} posters hung, '
               f'{len(set(depth.values()))} dependency tiers. Edit src/, not this file. -->\n')
     outputs['index.html'] = page.replace('<!DOCTYPE html>\n', '<!DOCTYPE html>\n' + banner, 1)
     return outputs
 
 
+def indent(text, spaces):
+    pad = ' ' * spaces
+    return '\n'.join(pad + ln if ln.strip() else ln for ln in text.split('\n'))
+
+
 if __name__ == '__main__':
     outputs = build()
-    if '--check' in sys.argv:
-        stale = [rel for rel, html in outputs.items()
-                 if not os.path.exists(os.path.join(ROOT, rel)) or read(ROOT, rel) != html]
-        if stale:
-            print('stale — run: python3 build.py\n  ' + '\n  '.join(stale))
-            sys.exit(1)
-        print(f'{len(outputs)} outputs up to date')
-    else:
-        for rel, html in outputs.items():
-            path = os.path.join(ROOT, rel)
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            with open(path, 'w', encoding='utf-8') as fh:
-                fh.write(html)
-        n = len(outputs) - 1
-        print(f'index.html + {n} poster pages — {sum(len(h) for h in outputs.values()):,} bytes')
+    shutil.rmtree(DIST, ignore_errors=True)
+    os.makedirs(DIST)
+    for rel, html in outputs.items():
+        path = os.path.join(DIST, rel)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, 'w', encoding='utf-8') as fh:
+            fh.write(html)
+    for name in STATIC:
+        src = os.path.join(ROOT, name)
+        if os.path.isdir(src):
+            shutil.copytree(src, os.path.join(DIST, name))
+        else:
+            shutil.copy2(src, os.path.join(DIST, name))
+    n = len(outputs) - 1
+    print(f'dist/ — index.html + {n} poster pages, {sum(len(h) for h in outputs.values()):,} bytes of HTML')

@@ -1,5 +1,5 @@
 {
-  "note": "Poster inventory: name → the frame the wall pins it in. Shape is the wall's decision, never the poster's; the poster page composes itself to whatever box it is given.",
+  "note": "Poster inventory. `posters` is every component that gets a page at /poster/<name>/, with the frame shape the wall pins it in; `wall` is which of them hang on the wall, re-hung one at a time. Shape is the wall's decision, never the poster's; the poster page composes itself to whatever box it is given.",
   "posters": {
     "requiem": "app",
     "req": "site",
@@ -15,5 +15,6 @@
     "blob": "app",
     "b256": "lib",
     "hmac": "site"
-  }
+  },
+  "wall": []
 }

@@ -12,13 +12,16 @@
   <meta property="og:type" content="website">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="apple-touch-icon" href="/favicon.png">
+<!--{ font preloads }-->
   <style>
+<!--{ fonts.css }-->
 <!--{ kit.css }-->
 <!--{ poster.css }-->
 <!--{ poster style }-->
   </style>
 </head>
 <body>
+  <script>document.documentElement.className = 'js';</script>
   <i id="wall" hidden></i>
   <div class="stage">
 <!--{ poster }-->
@@ -32,7 +35,14 @@
   <script>
   (function () {
     'use strict';
-<!--{ poster script }-->  })();
+<!--{ poster script }-->
+    // Reveal once the faces are in, so the poster never paints in a fallback
+    // and swaps. Capped, so a stalled font never leaves the page blank.
+    var root = document.documentElement, shown = false;
+    function show() { if (!shown) { shown = true; root.className += ' ready'; } }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(show, show);
+    setTimeout(show, 1500);
+  })();
   </script>
 </body>
 </html>

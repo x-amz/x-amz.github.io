@@ -40,9 +40,12 @@
       width: var(--stage-w); height: var(--stage-h);
       container-type: size; container-name: stage;
     }
+    .js .stage, .js .production { opacity: 0; }
+    .js.ready .stage, .js.ready .production { opacity: 1; transition: opacity 0.22s ease; }
+    @media (prefers-reduced-motion: reduce) { .js.ready .stage, .js.ready .production { transition: none; } }
 
     .production {
-      height: var(--foot); display: inline-flex; align-items: center; padding: 0 16px;
+      height: var(--foot); line-height: var(--foot); display: block; padding: 0 16px;
       font-family: var(--serial); font-size: 10px; letter-spacing: 0.3em;
       text-transform: uppercase; color: var(--production, var(--dim));
       transition: color 0.18s ease;
