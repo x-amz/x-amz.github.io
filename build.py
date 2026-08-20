@@ -35,7 +35,7 @@ FONTS = os.path.join(ROOT, 'fonts')
 DIST = os.path.join(ROOT, 'dist')
 
 # Served as they are, beside the generated pages.
-STATIC = ('js', 'fonts', 'favicon.png', 'combined.png', 'blob', 'support', 'requiem', '.nojekyll', 'CNAME')
+STATIC = ('js', 'fonts', 'favicon.png', 'hero.png', 'blob', 'support', 'requiem', '.nojekyll', 'CNAME')
 
 SHAPES = ('app', 'service', 'site', 'lib', 'shelf', 'sheet')
 
